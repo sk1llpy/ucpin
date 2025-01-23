@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить Redeem Код | Административный сайт Django</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div style="justify-content: center; text-align: center;">
+            <h1>Добавить код активации</h1>
+            <hr style="color: white; margin-bottom: 20px;" />
+            <form method="post">
+                {% csrf_token %}
+                <label for="code">Redeem Код:</label>
+                <div>
+                    <textarea rows="100" cols="300" placeholder="Redeem-code larni yozing..." required name="code" id="code"></textarea>
+                </div>
+                <label for="code">Package:</label>
+                <div>
+                    <select name="package" id="package">
+                        {% for package in packages %}
+                            <option value="{{ package.pk }}" id="option_package">{{ package.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit">Добавить</button>
+                <div>
+                    <a href="/admin/shop/redeemcode/">Назад к списку</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
