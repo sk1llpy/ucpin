@@ -18,3 +18,5 @@ uvicorn
 fastapi
 pydantic
 orjson
+gunicorn
+uvicorn
