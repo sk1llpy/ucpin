@@ -33,12 +33,12 @@ class UCPackagesTableRepository(BaseRepository):
 class PurchasesTableRepository(BaseRepository):
     table = PurchasesTable
 
-    async def purchase(self, account_id: int, balance_type: str, redeeem_code_id: int, session: Session):
+    async def purchase(self, account_id: int, balance_type: str, redeem_code_id: int, session: Session):
         with session:
             obj = PurchasesTable(
                 account_id = account_id,
                 balance_type = balance_type,
-                redeeem_code_id = redeeem_code_id
+                redeem_code_id = redeem_code_id
             )
 
             session.add(obj)
@@ -46,7 +46,7 @@ class PurchasesTableRepository(BaseRepository):
             session.refresh(obj)
 
             RedeemCodesTableRepository().edit(
-                conditions = {"id": redeeem_code_id},
+                conditions = {"id": redeem_code_id},
                 edits = {"is_used": True},
                 session = session
             )

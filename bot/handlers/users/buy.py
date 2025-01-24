@@ -143,15 +143,6 @@ async def purchase_confirm_yes_handler(call: types.CallbackQuery, state: FSMCont
 {html.italic("Redeem-kod'lar 👇")}\n"""
             )
 
-            edits = {}
-            edits['balance_usd' if balance_type == 'usd' else 'balance_uzs'] = (account.balance_usd if balance_type == 'usd' else account.balance_uzs) - total_price
-
-            repo.AccountsTableRepository().edit(
-                conditions = {"id": account.id},
-                edits = edits,
-                session = session
-            )
-
             redeem_codes = redeem_codes[:count]
             text = sended_message.text + "\n"
             num = 0
@@ -161,7 +152,7 @@ async def purchase_confirm_yes_handler(call: types.CallbackQuery, state: FSMCont
                 await repo.PurchasesTableRepository().purchase(
                     account_id = account.id,
                     balance_type = balance_type,
-                    redeeem_code_id = redeem_code.id,
+                    redeem_code_id = redeem_code.id,
                     session = session
                 )
 
@@ -172,6 +163,15 @@ async def purchase_confirm_yes_handler(call: types.CallbackQuery, state: FSMCont
                 await sended_message.edit_text(text = text)
 
                 time.sleep(0.1)
+            
+            edits = {}
+            edits['balance_usd' if balance_type == 'usd' else 'balance_uzs'] = (account.balance_usd if balance_type == 'usd' else account.balance_uzs) - total_price
+
+            repo.AccountsTableRepository().edit(
+                conditions = {"id": account.id},
+                edits = edits,
+                session = session
+            )
             
             await call.message.answer(
                 text = """<b>Kerakli bo'limni tanlang 👇</b>""",
