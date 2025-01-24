@@ -15,7 +15,7 @@ async def purchase_history_excel(data: list[dict]):
         ws.append(["Redeem-kod", "UC Paket", "Balans turi", "Harid vaqti"])
 
         for row in data:
-            values = row.values()
+            values = list(row.values())
             values[2] = values[2].upper()
 
             adjusted_dt: datetime.datetime = values[3] + datetime.timedelta(hours=5)            
