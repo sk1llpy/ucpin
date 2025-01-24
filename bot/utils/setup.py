@@ -8,7 +8,7 @@ from bot.middlewares.ban import CheckBanMiddleware
 
 
 async def setup_middlewares(dispatcher: Dispatcher):
-    dispatcher.message.middleware(CheckBanMiddleware)
+    CheckBanMiddleware.register(dispatcher)
 
 async def setup_filters(dispatcher: Dispatcher):
     dispatcher.message.filter(Chat)
