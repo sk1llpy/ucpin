@@ -1,7 +1,8 @@
 import os
 import random
-from openpyxl import Workbook
+import datetime
 
+from openpyxl import Workbook
 from data.config import BASE_DIR
 
 
@@ -11,11 +12,16 @@ async def purchase_history_excel(data: list[dict]):
     ws.title = "Purchase History"
 
     if not len(data) == 0:
-        header = data[0].keys()
-        ws.append(list(header))
+        ws.append(["Redeem-kod", "UC Paket", "Balans turi", "Harid vaqti"])
 
         for row in data:
-            ws.append([str(value) for value in row.values()])
+            values = row.values()
+            values[2] = values[2].upper()
+
+            adjusted_dt: datetime.datetime = values[3] + datetime.timedelta(hours=5)            
+            values[3] = adjusted_dt.strftime('%S:%M:%H %d-%m-%Y')
+
+            ws.append([str(value) for value in values])
 
         filename = f"purchase_history_{random.randint(1, 10000)}.xlsx"
         filepath = os.path.join(BASE_DIR, "bot", "documents", filename)
