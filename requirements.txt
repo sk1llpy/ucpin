@@ -14,11 +14,8 @@ pydantic-settings
 psycopg2
 psycopg2-binary
 geopy
-uvicorn
 fastapi
 pydantic
 orjson
 gunicorn
 openpyxl
-whitenoise
-uvicorn
