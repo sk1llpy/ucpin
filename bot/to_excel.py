@@ -18,7 +18,7 @@ async def purchase_history_excel(data: list[dict]):
             values = list(row.values())
             values[2] = values[2].upper()
 
-            adjusted_dt: datetime.datetime = values[3] + datetime.timedelta(hours=5)            
+            adjusted_dt: datetime.datetime = datetime.datetime.fromisoformat(str(values[3])) + datetime.timedelta(hours=5)            
             values[3] = adjusted_dt.strftime('%S:%M:%H %d-%m-%Y')
 
             ws.append([str(value) for value in values])
