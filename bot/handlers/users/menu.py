@@ -1,3 +1,5 @@
+import os
+
 from aiogram import types, F, html
 from aiogram.fsm.context import FSMContext
 from sqlalchemy.orm import Session
@@ -7,6 +9,7 @@ from bot.keyboards.inline import menu
 from bot.misc import bot
 from bot.routers import users
 from bot.states.register import RegisterState
+from bot.to_excel import purchase_history_excel
 from db import repository as repo
 
 
@@ -37,10 +40,29 @@ async def menu_instruction_handler(call: types.CallbackQuery):
 @users.callback_query(F.data == 'menu__contact')
 async def menu_contact_handler(call: types.CallbackQuery):
     await call.message.edit_text(
-        text = html.bold("""=☎️ Shikoyat va takliflar uchun: @shoxamng
-🧑‍💻 Dasturchi: @unrsk1ll"""),
+        text = html.bold("""☎️ Shikoyat va takliflar uchun: @shoxamng"""),
         reply_markup = await menu.back()
     )
+
+
+@users.callback_query(F.data == 'menu__purchases_history')
+@create_session
+async def menu_purchase_history_handler(call: types.CallbackQuery, session: Session):
+    account = await repo.UsersTableRepository().get_user_account(user_id=call.from_user.id, session=session)
+    purchases = await repo.AccountsTableRepository().get_purchase_history_as_dict(account_id=account.id, session=session)
+
+    filepath = await purchase_history_excel(data=purchases)
+
+    await call.message.edit_text(
+        text = f"""{html.bold("💰 Jami haridlar: ")} {len(purchases)} ta
+        
+{html.italic("Barcha xaridlar excel formatida yuborilmoqda ⏳")}""",
+        reply_markup = await menu.back()
+    )
+
+    await call.message.reply_document(document=types.FSInputFile(path=filepath))
+
+    os.remove(path=filepath)
 
 
 # Back to menu

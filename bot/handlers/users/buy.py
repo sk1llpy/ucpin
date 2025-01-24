@@ -126,6 +126,7 @@ async def purchase_confirm_yes_handler(call: types.CallbackQuery, state: FSMCont
 
     count = data.get('count')
     package = data.get('package')
+    package_id = data.get('package_id')
     total_price = data.get('total_price')
     balance_type = data.get('balance_type')
     redeem_codes = await repo.RedeemCodesTableRepository().get_active_redeem_codes_by_package_id(package_id=package.id, session=session)
@@ -157,10 +158,10 @@ async def purchase_confirm_yes_handler(call: types.CallbackQuery, state: FSMCont
             redeem_codes_text = "<b>Redeem-kod'lar 👇</b>\n"
 
             for redeem_code in redeem_codes:
-                repo.RedeemCodesTableRepository().edit(
-                    conditions = {"id": redeem_code.id},
-                    edits = {"is_used": True},
-                    session = session
+                await repo.PurchasesTableRepository().purchase(
+                    account_id = account.id,
+                    balance_type = balance_type,
+                    redeeem_code_id = redeem_code.id
                 )
 
                 num += 1

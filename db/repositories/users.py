@@ -1,6 +1,7 @@
-from db.schemas import UsersTable, AdminsTable, AccountsTable
+from db.schemas import UsersTable, AdminsTable, AccountsTable, RedeemCodesTable
 from db.repository import BaseRepository
 from db import repository as repo
+from db.schemas import PurchasesTable, UCPackagesTable
 
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -121,6 +122,26 @@ class AccountsTableRepository(BaseRepository):
         )
 
         return account
+    
+    async def get_purchase_history_as_dict(self, account_id: int, session: Session) -> list[dict]:
+        query = (
+            select(
+                RedeemCodesTable.code,
+                UCPackagesTable.title,
+                PurchasesTable.balance_type,
+                PurchasesTable.created_at
+            )
+            .join(RedeemCodesTable, PurchasesTable.redeem_code_id == RedeemCodesTable.id)
+            .join(UCPackagesTable, RedeemCodesTable.package_id == UCPackagesTable.id)
+            .where(PurchasesTable.account_id == account_id)
+        )
+
+        with session:
+            purchases = (
+                session.execute(query)
+            ).mappings().all()
+
+        return purchases
         
 
 class AdminsTableRepository(BaseRepository):

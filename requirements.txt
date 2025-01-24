@@ -19,4 +19,5 @@ fastapi
 pydantic
 orjson
 gunicorn
+openpyxl
 uvicorn
