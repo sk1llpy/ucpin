@@ -9,7 +9,7 @@ class UCPackageAdmin(unfold.ModelAdmin):
     list_display = ('title', 'price_usd', 'price_uzs',)
     search_fields = ('title',)
     list_filter = ('price_usd', 'price_uzs')
-    ordering = ('title',)
+    ordering = ('title', 'price_usd', 'price_uzs',)
     fieldsets = (
         (None, {
             'fields': ('title',)
