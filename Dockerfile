@@ -1,4 +1,4 @@
-# Stage 1 - Python setup
+# Stage 1 - Python setup for both Django and bot
 FROM python:3.11 AS base
 
 # Set the working directory to /app
@@ -11,24 +11,22 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container
 COPY . /app/
 
-# Expose the port that Gunicorn will use
-EXPOSE 8000
-
 # Set environment variables for production
 ENV PYTHONUNBUFFERED 1
 
 
-# Stage 2 - Nginx setup
-FROM nginx:latest
+# Stage 2 - Build Nginx for static files serving
+FROM nginx:latest AS nginx
 
-# Copy the Nginx configuration file
+# Copy Nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy static files from the Python stage
+# Copy static files from the Django app
 COPY --from=base /app/static /app/static
 
 # Expose Nginx port
 EXPOSE 80
+EXPOSE 443
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
