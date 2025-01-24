@@ -20,4 +20,5 @@ pydantic
 orjson
 gunicorn
 openpyxl
+whitenoise
 uvicorn
