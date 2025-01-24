@@ -45,7 +45,7 @@ services:
       - static_volume:/app/static
       - /etc/letsencrypt:/etc/letsencrypt  # Mount certs for SSL
     ports:
-      - "80:80"   # Expose HTTP
+      - "8080:80"   # Expose HTTP
       - "443:443" # Expose HTTPS
     depends_on:
       - web
