@@ -25,6 +25,7 @@ class CheckBanAndChatMiddleware(BaseMiddleware):
         event_data = event.dict()
 
         if event_data['chat']['type'] == ChatType.PRIVATE:
+            print(event_data)
             account = await repo.UsersTableRepository().get_user_account(
                 user_id = event_data['from_user']['id'], 
                 session = session
