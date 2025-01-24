@@ -15,7 +15,7 @@ CSRF_TRUSTED_ORIGINS = django.csrf_trusted_origins_list
 ROOT_URLCONF = "conf.urls"
 WSGI_APPLICATION = "conf.wsgi.application"
 
-STATIC_URL = '/app/static/'
+STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
