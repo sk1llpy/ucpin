@@ -4,12 +4,18 @@ FROM python:3.11
 # Set the working directory to /app
 WORKDIR /app
 
+# Install Nginx
+RUN apt-get update && apt-get install -y nginx
+
 # Copy requirements file and install dependencies
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container
 COPY . /app/
+
+# Copy Nginx config
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Set environment variables for production
 ENV PYTHONUNBUFFERED 1
