@@ -8,23 +8,21 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+    - "5432:5432"
     env_file:
       - .env
 
   web:
     build: .
-    command: gunicorn conf.wsgi:application --bind 0.0.0.0:8000 --workers 3
+    command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
-      - static_volume:/app/static
     ports:
-      - "8000:80"   # Gunicorn exposed to Nginx
+      - "8000:8000"
     env_file:
       - .env
     depends_on:
       - db
-    restart: always
 
   bot:
     build: .
@@ -33,30 +31,8 @@ services:
       - .:/app
     env_file:
       - .env
-    depends_on:
-      - db
-    restart: always
 
-  nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - static_volume:/app/static
-      - /etc/letsencrypt:/etc/letsencrypt  # Mount certs for SSL
-    ports:
-      - "8080:80"   # Expose HTTP
-      - "443:443" # Expose HTTPS
-    depends_on:
-      - web
-    networks:
-      - app_network
-    restart: always
-
-networks:
-  app_network:
-    driver: bridge
+  
 
 volumes:
   postgres_data:
-  static_volume:

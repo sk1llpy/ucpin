@@ -17,7 +17,6 @@ WSGI_APPLICATION = "conf.wsgi.application"
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = "uploads/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
