@@ -19,7 +19,7 @@ services:
       - .:/app
       - static_volume:/app/static
     ports:
-      - "8000:8000"
+      - "8000:80"
     env_file:
       - .env
     depends_on:
@@ -48,7 +48,6 @@ services:
     networks:
       - app_network
     restart: always
-
 
 networks:
   app_network:
