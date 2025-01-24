@@ -52,7 +52,7 @@ class Purchase(BaseModel):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Покупка {self.account.full_name} - Код: {self.redeem_code.code}"
+        return f"Покупка {self.account.email} - Код: {self.redeem_code.code}"
 
     class Meta:
         verbose_name = 'Покупка'
