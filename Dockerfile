@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy requirements file and install dependencies
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install gunicorn
 
 # Copy the current directory contents into the container
 COPY . /app/
