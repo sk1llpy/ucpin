@@ -22,7 +22,9 @@ class CheckBanAndChatMiddleware(BaseMiddleware):
         data: Dict[str, Any], 
         session: Session
     ) -> Any:
+        print("HELLOO")
         event_data = event.dict()
+        print(event_data)
 
         if event_data['chat']['type'] == ChatType.PRIVATE:
             print(event_data)
