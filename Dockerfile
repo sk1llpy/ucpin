@@ -18,4 +18,4 @@ ENV PYTHONUNBUFFERED 1
 EXPOSE 8000
 
 # Set the entrypoint for Gunicorn to serve the Django app
-CMD ["gunicorn", "--workers", "3", "--bind", "0.0.0.0:8000", "your_project_name.wsgi:application"]
+CMD ["gunicorn", "conf.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
