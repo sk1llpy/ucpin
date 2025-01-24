@@ -27,7 +27,7 @@ async def purchase_history_excel(data: list[dict]):
 
             # Adjust and format the datetime (adding 5 hours)
             adjusted_dt = datetime.fromisoformat(str(values[3])) + timedelta(hours=5)
-            values[3] = adjusted_dt.strftime('%H:%M:%S %d-%m-%Y')
+            values[3] = adjusted_dt.strftime('%H:%M %d-%m-%Y')
 
             # Append formatted row to the Excel sheet
             ws.append([str(value) for value in values])
