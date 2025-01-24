@@ -15,7 +15,7 @@ async def purchase_history_excel(data: list[dict]):
         ws.append(list(header))
 
         for row in data:
-            ws.append(list(row.values()))
+            ws.append([str(value) for value in row.values()])
 
         filename = f"purchase_history_{random.randint(1, 10000)}.xlsx"
         filepath = os.path.join(BASE_DIR, "bot", "documents", filename)
