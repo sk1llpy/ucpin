@@ -10,15 +10,18 @@ async def purchase_history_excel(data: list[dict]):
     ws = wb.active
     ws.title = "Purchase History"
 
-    header = data[0].keys()
-    ws.append(list(header))
+    if not len(data) == 0:
+        header = data[0].keys()
+        ws.append(list(header))
 
-    for row in data:
-        ws.append(list(row.values()))
+        for row in data:
+            ws.append(list(row.values()))
 
-    filename = f"purchase_history_{random.randint(1, 10000)}.xlsx"
-    filepath = os.path.join(BASE_DIR, "bot", "documents", filename)
+        filename = f"purchase_history_{random.randint(1, 10000)}.xlsx"
+        filepath = os.path.join(BASE_DIR, "bot", "documents", filename)
 
-    wb.save(filepath)
+        wb.save(filepath)
 
-    return filepath
+        return filepath
+    else:
+        return None

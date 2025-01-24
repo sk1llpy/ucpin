@@ -51,19 +51,24 @@ async def menu_purchase_history_handler(call: types.CallbackQuery, session: Sess
     account = await repo.UsersTableRepository().get_user_account(user_id=call.from_user.id, session=session)
     purchases = await repo.AccountsTableRepository().get_purchase_history_as_dict(account_id=account.id, session=session)
 
-    filepath = await purchase_history_excel(data=purchases)
+    if purchases:
+        filepath = await purchase_history_excel(data=purchases)
 
-    await call.message.edit_text(
-        text = f"""{html.bold("💰 Jami haridlar: ")} {len(purchases)} ta
-        
+        await call.message.edit_text(
+            text = f"""{html.bold("💰 Jami haridlar: ")} {len(purchases)} ta
+            
 {html.italic("Barcha xaridlar excel formatida yuborilmoqda ⏳")}""",
-        reply_markup = await menu.back()
-    )
+            reply_markup = await menu.back()
+        )
 
-    await call.message.reply_document(document=types.FSInputFile(path=filepath))
+        await call.message.reply_document(document=types.FSInputFile(path=filepath))
 
-    os.remove(path=filepath)
-
+        os.remove(path=filepath)
+    else:
+        await call.message.edit_text(
+            text = html.bold("Hech qanday haridlar topilmadi ❌"),
+            reply_markup = await menu.button()
+        )
 
 # Back to menu
 @users.callback_query(F.data == 'back__to_menu')
