@@ -1,5 +1,5 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11
+# Stage 1 - Python setup
+FROM python:3.11 AS base
 
 # Set the working directory to /app
 WORKDIR /app
@@ -17,13 +17,18 @@ EXPOSE 8000
 # Set environment variables for production
 ENV PYTHONUNBUFFERED 1
 
-# Stage 2 - Nginx Setup
+
+# Stage 2 - Nginx setup
 FROM nginx:latest
 
+# Copy the Nginx configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# Copy static files from the Python stage
 COPY --from=base /app/static /app/static
 
+# Expose Nginx port
 EXPOSE 80
 
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
