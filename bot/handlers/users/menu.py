@@ -67,7 +67,7 @@ async def menu_purchase_history_handler(call: types.CallbackQuery, session: Sess
     else:
         await call.message.edit_text(
             text = html.bold("Hech qanday haridlar topilmadi ❌"),
-            reply_markup = await menu.button()
+            reply_markup = await menu.back()
         )
 
 # Back to menu
