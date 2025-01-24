@@ -161,7 +161,8 @@ async def purchase_confirm_yes_handler(call: types.CallbackQuery, state: FSMCont
                 await repo.PurchasesTableRepository().purchase(
                     account_id = account.id,
                     balance_type = balance_type,
-                    redeeem_code_id = redeem_code.id
+                    redeeem_code_id = redeem_code.id,
+                    session = session
                 )
 
                 num += 1
