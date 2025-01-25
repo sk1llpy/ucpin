@@ -44,10 +44,10 @@ async def counter(current: int = 1):
                 InlineKeyboardButton(text="+", callback_data='plus')
             ],
             [
-                InlineKeyboardButton(text="⬅️ Orqaga", callback_data='purchase__back_to_uc_package')
+                InlineKeyboardButton(text="✅ Tasdiqlash", callback_data='purchase__confirm'),
             ],
             [
-                InlineKeyboardButton(text="✅ Tasdiqlash", callback_data='purchase__confirm'),
+                InlineKeyboardButton(text="⬅️ Orqaga", callback_data='purchase__back_to_uc_package')
             ]
         ]
     )
@@ -59,6 +59,9 @@ async def confirm():
             [
                 InlineKeyboardButton(text="✅ Ha", callback_data="purchase__yes"),
                 InlineKeyboardButton(text="❌ Yo'q", callback_data="purchase__no")
+            ],
+            [
+                InlineKeyboardButton(text="⬅️ Orqaga", callback_data='purchase__back_to_counter')
             ]
         ]
     )

@@ -69,13 +69,13 @@ async def purchase_package_handler(call: types.CallbackQuery, state: FSMContext,
         )
 
         if reedem_codes:
-            await state.update_data(package_id = package_id, package = package_obj, max_count = len(reedem_codes))
+            await state.update_data(package_id = package_id, package = package_obj, max_count = len(reedem_codes), count = 1)
             await state.set_state(PurchaseState.verify)
             
             await call.message.edit_text(
                 text=f"""{html.bold("Siz tanlagan paket:")} {package_obj.title}
 
-    {html.italic("Qolgan redeem-kod'lar soni:")} {len(reedem_codes)}""",
+{html.italic("Qolgan redeem-kod'lar soni:")} {len(reedem_codes)}""",
                 reply_markup=await purchase.counter()
             )
 
@@ -97,6 +97,7 @@ async def purchase_package_handler(call: types.CallbackQuery, state: FSMContext,
 async def purchase_counter_plus_handler(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     current = int(call.message.reply_markup.inline_keyboard[0][1].text)
+    await state.update_data(count = current)
     
     if current < data.get("max_count"):
         await call.message.edit_reply_markup(reply_markup=await purchase.counter(current + 1))
@@ -109,6 +110,7 @@ async def purchase_counter_plus_handler(call: types.CallbackQuery, state: FSMCon
 @users.callback_query(IsBanned(), F.data == "minus", StateFilter(PurchaseState.verify))
 async def purchase_counter_minus_handler(call: types.CallbackQuery, state: FSMContext):
     current = int(call.message.reply_markup.inline_keyboard[0][1].text)
+    await state.update_data(count = current)
 
     if current > 1:
         await call.message.edit_reply_markup(reply_markup=await purchase.counter(current - 1))
@@ -249,4 +251,25 @@ async def purchase_confirm_no_handler(call: types.CallbackQuery, state: FSMConte
     await call.message.edit_text(
         text = html.bold("Harid bekor qilindi ❌") + "\n\n" + html.italic("Kerakli bo'limni tanlang 👇"),
         reply_markup = await menu.button()
+    )
+
+
+@users.callback_query(IsBanned(), F.data == "purchase__back_to_counter", StateFilter(PurchaseState.second_step_verification))
+@create_session
+async def purchase_back_to_counter_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
+    data = await state.get_data()
+
+    package_id = data.get('package_id')
+    balance_type = data['balance_type']
+    count = data['count']
+    
+    package_obj = await repo.UCPackagesTableRepository().get_ucpackage_by_id(package_id = package_id, session = session)
+    reedem_codes = await repo.RedeemCodesTableRepository().get_active_redeem_codes_by_package_id(package_id = package_id, session = session)
+
+    await state.set_state(PurchaseState.verify)
+    await call.message.edit_text(
+        text=f"""{html.bold("Siz tanlagan paket:")} {package_obj.title}
+
+{html.italic("Qolgan redeem-kod'lar soni:")} {len(reedem_codes)}""",
+        reply_markup=await purchase.counter(count)
     )
