@@ -1,5 +1,5 @@
 from bot.misc import dp, bot
-from bot.utils import logging, bot_commands, include_routers, setup
+from bot.utils import logging, include_routers, setup
 from bot import middlewares, filters, handlers
 
 
