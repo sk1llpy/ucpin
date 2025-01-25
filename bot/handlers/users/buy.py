@@ -119,11 +119,11 @@ async def purchase_counter_minus_handler(call: types.CallbackQuery, state: FSMCo
 # Confirm
 @users.callback_query(IsBanned(), F.data.in_(["purchase__back_to_uc_package", "purchase__confirm"]), StateFilter(PurchaseState.verify))
 @create_session
-async def purchase_confirm_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
-    if not call.data == "purchase__back_to_uc_package":
-        data = await state.get_data()
+async def purchase_confirm_handler(call: types.CallbackQuery, state: FSMContext, session: Session):   
+    data = await state.get_data()
+    balance_type = data.get('balance_type')
 
-        balance_type = data.get('balance_type')
+    if not call.data == "purchase__back_to_uc_package":
         package = data.get('package')
         current = int(call.message.reply_markup.inline_keyboard[0][1].text)
 
@@ -141,7 +141,7 @@ async def purchase_confirm_handler(call: types.CallbackQuery, state: FSMContext,
         
         await call.message.edit_text(
             text=html.bold("Kerakli uc paketni tanlang 👇"),
-            reply_markup=await purchase.packages(call.data.split("__")[1].lower(), session)
+            reply_markup=await purchase.packages(balance_type, session)
         )
         
 
