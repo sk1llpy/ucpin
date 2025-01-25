@@ -11,13 +11,14 @@ from bot.keyboards.default import register
 from bot.keyboards.inline import login, menu
 from bot.misc import bot
 from bot.routers import users
+from bot.filters.ban import IsBanned
 from bot.states.register import RegisterState
 from db import repository as repo
 
 email_regexp = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'
 
 
-@users.callback_query(F.data.in_(['login', 'register']), StateFilter(RegisterState.action))
+@users.callback_query(IsBanned(), F.data.in_(['login', 'register']), StateFilter(RegisterState.action))
 async def action_register_handler(call: types.CallbackQuery, state: FSMContext):
     if call.data == 'register':
         await state.set_state(RegisterState.phone_number)

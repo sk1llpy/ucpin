@@ -33,7 +33,7 @@ class CheckBanAndChatMiddleware(BaseMiddleware):
                 session = session
             )
 
-            if ((not account.is_banned) if account else True) and (not event_data.get('text', 'NOT TEXT') == "/quit"):
+            if ((not account.is_banned) if account else True) and (not event_data.get('text', None) == "/quit"):
                 return await handler(event, data)
             else:
                 await bot.send_message(

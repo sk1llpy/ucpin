@@ -3,6 +3,7 @@ from bot.decorators import create_session
 from bot.routers import users
 from bot.keyboards.inline import menu, login
 from bot.states.register import RegisterState
+from bot.filters.ban import IsBanned
 
 from aiogram import types
 from aiogram.filters import CommandStart
