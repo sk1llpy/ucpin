@@ -106,7 +106,7 @@ class AccountsTableRepository(BaseRepository):
                 session.execute(query)
             ).scalar_one_or_none()
         
-        return account
+        return True if account else False
     
     async def check_phone_number_exists(self, phone_number: str, session: Session):
         query = select(AccountsTable).where(AccountsTable.phone_number == phone_number)
@@ -116,7 +116,7 @@ class AccountsTableRepository(BaseRepository):
                 session.execute(query)
             ).scalar_one_or_none()
         
-        return account
+        return True if account else False
     
     async def create_account(self, account_data: dict, session: Session) -> AccountsTable:
         account = self.create(

@@ -18,57 +18,76 @@ from db import repository as repo
 email_regexp = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'
 
 
-@users.callback_query(IsBanned(), F.data.in_(['login', 'register']), StateFilter(RegisterState.action))
-async def action_register_handler(call: types.CallbackQuery, state: FSMContext):
-    if call.data == 'register':
-        await state.set_state(RegisterState.phone_number)
-        await call.message.delete()
+@users.callback_query(F.data.in_(['login', 'register']), StateFilter(RegisterState.action))
+@create_session
+async def action_register_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
+    user_account = await repo.UsersTableRepository().get_user_account(user_id=call.from_user.id, session=session)
 
-        msg_for_delete = await call.message.answer(
-            text="Ro'yxatdan o'tish uchun telefon raqamingizni yuboring 📞", reply_markup=await register.phone_number()
-        )
-    else:
-        await state.set_state(RegisterState.phone_number_or_email)
-        await call.message.edit_text(
-            text=html.bold("Hisobga kirish uchun elektron-pochtangizni yoki "
-                           "telefon raqamingizni kiriting 👇")
-        )
+    if not user_account: 
+        if call.data == 'register':
+            await state.set_state(RegisterState.phone_number)
+            await call.message.delete()
+
+            msg_for_delete = await call.message.answer(
+                text = html.bold("Ro'yxatdan o'tish uchun telefon raqamingizni yuboring 📞"),
+                reply_markup = await register.phone_number()
+            )
+        else:
+            await state.set_state(RegisterState.phone_number_or_email)
+            await call.message.edit_text(
+                text = html.bold("Hisobga kirish uchun elektron-pochtangizni yoki telefon raqamingizni kiriting 👇")
+            )
 
 
 # Register
 @users.message(F.content_type == types.ContentType.CONTACT, StateFilter(RegisterState.phone_number))
-async def phone_number_register_handler(message: types.Message, state: FSMContext):
+@create_session
+async def phone_number_register_handler(message: types.Message, state: FSMContext, session: Session):
     phone_number = message.contact.phone_number
     phone_number = ("+" + str(phone_number)) if not phone_number.startswith("+") else phone_number
 
-    if phone_number.startswith("+998"):
-        await state.update_data({"phone_number": phone_number})
-        await state.set_state(RegisterState.email)
+    phone_number_exists = await repo.AccountsTableRepository().check_phone_number_exists(phone_number=phone_number, session=session)
 
-        await message.reply(
-            text=html.bold("Telefon raqamingiz muvvafaqiyatli qo'shildi ✅"),
-            reply_markup=types.ReplyKeyboardRemove()
-        )
-        await message.answer(
-            text=html.bold("Elektron-pochtangizni kiriting 📧")
-        )
+    if not phone_number_exists:
+        if phone_number.startswith("+998"):
+            await state.update_data({"phone_number": phone_number})
+            await state.set_state(RegisterState.email)
+
+            await message.reply(
+                text=html.bold("Telefon raqamingiz muvvafaqiyatli qo'shildi ✅"),
+                reply_markup=types.ReplyKeyboardRemove()
+            )
+            await message.answer(
+                text=html.bold("Elektron-pochtangizni kiriting 📧")
+            )
+        else:
+            await message.reply(text=html.bold("Telefon raqam +998 bilan boshlanishi kerak ❌"))
+    else:
+        await message.reply(text=html.bold("Ushbu telefon raqam allaqachon mavjud ❌"))
 
 
 @users.message(F.content_type == types.ContentType.TEXT, StateFilter(RegisterState.email))
-async def email_register_handler(message: types.Message, state: FSMContext):
+@create_session
+async def email_register_handler(message: types.Message, state: FSMContext, session: Session):
     email = message.text
+    email_is_exists = await repo.AccountsTableRepository().check_email_exists(email=email, session=session)
 
-    if re.match(email_regexp, email):
-        await state.update_data({"email": email})
-        await state.set_state(RegisterState.password)
+    if not email_is_exists:
+        if re.match(email_regexp, email):
+            await state.update_data({"email": email})
+            await state.set_state(RegisterState.password)
 
-        await message.reply(
-            text=html.bold("Elektron-pochtangiz muvvafaqiyatli qo'shildi ✅"),
-            reply_markup=types.ReplyKeyboardRemove()
-        )
-        await message.answer(
-            text=html.bold("Parol yuboring 🔐") + "\n\n" + html.italic("Parol kamida 8 ta harfdan iborat bo'lishi kerak")
-        )
+            await message.reply(
+                text=html.bold("Elektron-pochtangiz muvvafaqiyatli qo'shildi ✅"),
+                reply_markup=types.ReplyKeyboardRemove()
+            )
+            await message.answer(
+                text=html.bold("Parol yuboring 🔐") + "\n\n" + html.italic("Parol kamida 8 ta harfdan iborat bo'lishi kerak")
+            )
+        else:
+            await message.reply(text=html.bold("Elektron-pochta notog'ri formatda kiritildi ❌"))
+    else:
+        await message.reply(text=html.bold("Ushbu elektron-pochta allaqachon mavjud ❌"))
 
 
 @users.message(F.content_type == types.ContentType.TEXT, StateFilter(RegisterState.password))
