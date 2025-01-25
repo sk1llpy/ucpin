@@ -58,7 +58,7 @@ class UsersTableRepository(BaseRepository):
                 account = await repo.AccountsTableRepository().get_account(account_data, session)
                 
                 if account:
-                    if account.is_banned:
+                    if not account.is_banned:
                         self.edit(
                             conditions={
                                 "user_id": user_id
