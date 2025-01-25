@@ -23,13 +23,17 @@ class UsersTableRepository(BaseRepository):
     async def get_user_account(self, user_id, session: Session):
         with session:
             user = await self.get_user(user_id = user_id, session = session)
-            query = select(AccountsTable).where(AccountsTable.id == user.account_id)
 
-            account = (
-                session.execute(query)
-            ).scalar_one_or_none()
+            if user:
+                query = select(AccountsTable).where(AccountsTable.id == user.account_id)
 
-            return account
+                account = (
+                    session.execute(query)
+                ).scalar_one_or_none()
+
+                return account
+            
+            return None
 
 
     async def create_user(self, user: types.User, is_logined: bool, session: Session):
