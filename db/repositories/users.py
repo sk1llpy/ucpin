@@ -70,7 +70,7 @@ class UsersTableRepository(BaseRepository):
                             session = session
                         )
                     else:
-                        {"error": "ACCOUNT_BANNED"}
+                        return {"error": "ACCOUNT_BANNED"}
                 else:
                     return {"error": "ACCOUNT_NOT_FOUND"}
 
