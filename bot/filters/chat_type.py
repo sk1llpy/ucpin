@@ -1,8 +1,6 @@
 from aiogram.filters import Filter
 from aiogram.enums import ChatType
 
-from aiogram.types import Chat
-
 class Chat(Filter):
     def __init__(self, *args) -> None:
         self.chat_type = ''

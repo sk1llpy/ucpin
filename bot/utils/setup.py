@@ -12,7 +12,7 @@ async def setup_middlewares(dispatcher: Dispatcher):
     dispatcher.message.middleware(CheckBanAndChatMiddleware())
 
 async def setup_filters(dispatcher: Dispatcher):
+    dispatcher.message.filter(IsBanned)
     dispatcher.message.filter(Chat)
     dispatcher.message.filter(Text)
     dispatcher.message.filter(ContentType)
-    dispatcher.message.filter(IsBanned)
