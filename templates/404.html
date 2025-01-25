@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found</title>
+    <style>
+        body {
+            background-color: rgb(17, 24, 39);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            font-family: Arial, Helvetica, sans-serif;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px 20px;
+            max-width: 500px;
+            width: 90%;
+            background: rgba(31, 41, 55, 0.9);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before,
+        .container::after {
+            content: "";
+            position: absolute;
+            width: 250%;
+            height: 250%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent);
+            border-radius: 50%;
+            animation: spin 10s infinite linear;
+            z-index: -1;
+        }
+
+        .container::before {
+            top: -150%;
+            left: -150%;
+        }
+
+        .container::after {
+            bottom: -150%;
+            right: -150%;
+            animation-direction: reverse;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-family: cursive;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin: 0;
+            color: #8b5cf6;
+            text-shadow: 0 5px 15px rgba(139, 92, 246, 0.7);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 20px 0;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 20px 0;
+            color: #d1d5db;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 5px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 15px 55px;
+            color: white;
+            background: linear-gradient(90deg, #8b5cf6, rebeccapurple);
+            border-radius: 30px;
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.6);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.8);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 0.9rem;
+            }
+
+            a {
+                padding: 12px 45px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 3rem;
+            }
+
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            p {
+                font-size: 0.8rem;
+            }
+
+            a {
+                padding: 10px 35px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-code">404</div>
+        <h1>Voy! Sahifa topilmadi</h1>
+        <p>Kechirasiz, siz qidirayotgan sahifani topa olmadik. U ko'chirilgan yoki o'chirilgan bo'lishi mumkin.</p>
+        <a href="/">Asosiyga qaytish</a>
+    </div>
+</body>
+</html>

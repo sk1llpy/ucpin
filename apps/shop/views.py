@@ -1,22 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 
 from . import models
 
 
 # Create your views here.
-class RedirectView(View):
-    def get(self, request: HttpRequest):
-        if request.user:
-            if request.user.is_superuser:
-                return render(request, 'redirect.html')
-            else:
-                return HttpResponse("<h1>404 | Page not found<h1>")
-        else:
-            return HttpResponse("<h1>404 | Page not found<h1>")
-
-
 class CreateRedeemCodeView(View):
     def get(self, request: HttpRequest):
         if request.user:
@@ -25,9 +14,9 @@ class CreateRedeemCodeView(View):
 
                 return render(request, 'redeem_code.html', context={"packages": packages})
             else:
-                return HttpResponse("<h1>404 | Page not found<h1>")
+                return redirect('admin:login')
         else:
-            return HttpResponse("<h1>404 | Page not found<h1>")
+            return redirect('admin:login')
     
     def post(self, request: HttpRequest):
         codes: str = request.POST.get('code')
@@ -53,4 +42,4 @@ class CreateRedeemCodeView(View):
             packages = models.UCPackage.objects.all()
             return render(request, 'redeem_code.html', context={"packages": packages, "error": "Redeem-code allaqachon mavjud!"})
         else:
-            return redirect('redirect')
+            return render(request, 'redeem_code.html', context={"success": True})
