@@ -7,7 +7,7 @@ from db import repository as repo
 from bot.decorators import create_session
 
 class IsBanned(Filter):
-    def __init__(self, is_banned: bool = True, *args, **kwargs):
+    def __init__(self, is_banned: bool = False, *args, **kwargs):
         self.is_banned = is_banned
 
     @create_session
