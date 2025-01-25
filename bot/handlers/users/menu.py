@@ -79,7 +79,6 @@ async def back_to_menu_handler(call: types.CallbackQuery):
         reply_markup = await menu.button()
     )
 
-
 # If user is banned
 @users.callback_query(IsBanned(True))
 async def if_user_banned_handler(call: types.CallbackQuery):

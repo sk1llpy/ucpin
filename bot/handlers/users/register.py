@@ -61,9 +61,9 @@ async def phone_number_register_handler(message: types.Message, state: FSMContex
                 text=html.bold("Elektron-pochtangizni kiriting 📧")
             )
         else:
-            await message.reply(text=html.bold("Telefon raqam +998 bilan boshlanishi kerak ❌"))
+            await message.reply(text=html.bold("Telefon raqam +998 bilan boshlanishi kerak ❌"), reply_markup=types.ReplyKeyboardRemove())
     else:
-        await message.reply(text=html.bold("Ushbu telefon raqam allaqachon mavjud ❌"))
+        await message.reply(text=html.bold("Ushbu telefon raqam allaqachon mavjud ❌"), reply_markup=types.ReplyKeyboardRemove())
 
 
 @users.message(F.content_type == types.ContentType.TEXT, StateFilter(RegisterState.email))

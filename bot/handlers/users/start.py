@@ -22,12 +22,14 @@ async def command_start(message: types.Message, state: FSMContext, session: Sess
 
     if user:
         if user.is_logined:
-            await message.answer(
+            msg = await message.answer(
                 text = f"""<b>Salom {message.from_user.first_name} 👋</b>
 
 <i>Kerakli bo'limni tanlang 👇</i>""",
-                reply_markup = await menu.button()
+                reply_markup = types.ReplyKeyboardRemove()
             )
+
+            await msg.edit_reply_markup(reply_markup = await menu.button())
         else:
             await state.set_state(RegisterState.action)
             
