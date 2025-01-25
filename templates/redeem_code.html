@@ -95,11 +95,26 @@
         a:hover {
             color: #a78bfa;
         }
+
+        .error-message {
+            background-color: #b91c1c;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Добавить код активации</h1>
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
         <hr />
         <form method="post">
             {% csrf_token %}

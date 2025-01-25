@@ -34,14 +34,23 @@ class CreateRedeemCodeView(View):
         package: int = request.POST.get('package')
 
         codes = codes.split()
+        error = False
 
         for code in codes:
-            package_obj = models.UCPackage.objects.get(pk=package)
-            obj = models.RedeemCode.objects.create(
-                code=code,
-                package=package_obj,
-                is_used=False,
-            )
-            obj.save()
+            try:
+                package_obj = models.UCPackage.objects.get(pk=package)
+                obj = models.RedeemCode.objects.create(
+                    code=code,
+                    package=package_obj,
+                    is_used=False,
+                )
+                obj.save()
+            except:
+                error = True
+                break
         
-        return redirect('redirect')
+        if error:
+            packages = models.UCPackage.objects.all()
+            return render(request, 'redeem_code.html', context={"packages": packages, "error": "Redeem-code allaqachon mavjud!"})
+        else:
+            return redirect('redirect')
