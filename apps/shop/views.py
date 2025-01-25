@@ -1,22 +1,31 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.http import HttpRequest, HttpResponse
 
 from . import models
 
 
 # Create your views here.
 class RedirectView(View):
-    def get(self, request):
-        return render(request, 'redirect.html')
+    def get(self, request: HttpRequest):
+        if request.user:
+            if request.user.is_superuser:
+                return render(request, 'redirect.html')
+        else:
+            return HttpResponse("<h1>404 | Page not found<h1>")
 
 
 class CreateRedeemCodeView(View):
-    def get(self, request):
-        packages = models.UCPackage.objects.all()
+    def get(self, request: HttpRequest):
+        if request.user:
+            if request.user.is_superuser:
+                packages = models.UCPackage.objects.all()
 
-        return render(request, 'redeem_code.html', context={"packages": packages})
+                return render(request, 'redeem_code.html', context={"packages": packages})
+        else:
+            return HttpResponse("<h1>404 | Page not found<h1>")
     
-    def post(self, request):
+    def post(self, request: HttpRequest):
         codes: str = request.POST.get('code')
         package: int = request.POST.get('package')
 
