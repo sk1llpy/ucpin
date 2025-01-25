@@ -98,11 +98,11 @@
 
         .error-message {
             background-color: #b91c1c;
-            color: white;
-            padding: 10px;
+            color: rgb(206, 206, 206);
+            padding: 13px;
             border-radius: 5px;
             margin-bottom: 20px;
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             text-align: left;
         }
     </style>
@@ -111,6 +111,7 @@
     <div class="container">
         <h1>Добавить код активации</h1>
         {% if error %}
+        <hr />
         <div class="error-message">
             {{ error }}
         </div>
