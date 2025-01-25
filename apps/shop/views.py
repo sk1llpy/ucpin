@@ -11,6 +11,8 @@ class RedirectView(View):
         if request.user:
             if request.user.is_superuser:
                 return render(request, 'redirect.html')
+            else:
+                return HttpResponse("<h1>404 | Page not found<h1>")
         else:
             return HttpResponse("<h1>404 | Page not found<h1>")
 
@@ -22,6 +24,8 @@ class CreateRedeemCodeView(View):
                 packages = models.UCPackage.objects.all()
 
                 return render(request, 'redeem_code.html', context={"packages": packages})
+            else:
+                return HttpResponse("<h1>404 | Page not found<h1>")
         else:
             return HttpResponse("<h1>404 | Page not found<h1>")
     
