@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from apps.general.views import PageNotFoundView
 
 urlpatterns = [
-    path('', include('apps.shop.urls')),
+    path('shop/', include('apps.shop.urls')),
     
     # Admin-panel
     path('', admin.site.urls),
