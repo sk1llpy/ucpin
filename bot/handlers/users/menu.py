@@ -78,3 +78,9 @@ async def back_to_menu_handler(call: types.CallbackQuery):
         text = html.bold("Kerakli bo'limni tanlang 👇"),
         reply_markup = await menu.button()
     )
+
+
+# If user is banned
+@users.callback_query(IsBanned(True))
+async def if_user_banned_handler(call: types.CallbackQuery):
+    await call.message.edit_text(text = html.bold("Hech qanday haridlar topilmadi ❌"))
