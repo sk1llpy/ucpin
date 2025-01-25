@@ -14,7 +14,7 @@ from bot.filters.ban import IsBanned
 from db import repository as repo
 
 
-@users.callback_query(IsBanned(), F.data == 'menu__account')
+@users.callback_query(IsBanned, F.data == 'menu__account')
 @create_session
 async def menu_account_handler(call: types.CallbackQuery, session: Session):
     account = await repo.UsersTableRepository().get_user_account(user_id=call.from_user.id, session=session)
@@ -30,7 +30,7 @@ async def menu_account_handler(call: types.CallbackQuery, session: Session):
     )
 
 
-@users.callback_query(IsBanned(), F.data == 'menu__insturction')
+@users.callback_query(IsBanned, F.data == 'menu__insturction')
 async def menu_instruction_handler(call: types.CallbackQuery):
     await call.message.edit_text(
         text = html.bold("Botdan foydalanish uchun qo'llanma 👇") + "\n\n" + "https://t.me/shaxboz_gg",
@@ -38,7 +38,7 @@ async def menu_instruction_handler(call: types.CallbackQuery):
     )
 
 
-@users.callback_query(IsBanned(), F.data == 'menu__contact')
+@users.callback_query(IsBanned, F.data == 'menu__contact')
 async def menu_contact_handler(call: types.CallbackQuery):
     await call.message.edit_text(
         text = html.bold("""☎️ Shikoyat va takliflar uchun: @shoxamng"""),
@@ -46,7 +46,7 @@ async def menu_contact_handler(call: types.CallbackQuery):
     )
 
 
-@users.callback_query(IsBanned(), F.data == 'menu__purchases_history')
+@users.callback_query(IsBanned, F.data == 'menu__purchases_history')
 @create_session
 async def menu_purchase_history_handler(call: types.CallbackQuery, session: Session):
     account = await repo.UsersTableRepository().get_user_account(user_id=call.from_user.id, session=session)
@@ -72,7 +72,7 @@ async def menu_purchase_history_handler(call: types.CallbackQuery, session: Sess
         )
 
 # Back to menu
-@users.callback_query(IsBanned(), F.data == 'back__to_menu')
+@users.callback_query(IsBanned, F.data == 'back__to_menu')
 async def back_to_menu_handler(call: types.CallbackQuery):
     await call.message.edit_text(
         text = html.bold("Kerakli bo'limni tanlang 👇"),

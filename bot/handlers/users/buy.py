@@ -14,7 +14,7 @@ from bot.filters.ban import IsBanned
 from db import repository as repo
 
 
-@users.callback_query(IsBanned(), F.data == 'menu__purchase')
+@users.callback_query(IsBanned, F.data == 'menu__purchase')
 @create_session
 async def menu_purchase_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
     await state.set_state(PurchaseState.balance_type)
@@ -24,7 +24,7 @@ async def menu_purchase_handler(call: types.CallbackQuery, state: FSMContext, se
     )
     
 
-@users.callback_query(IsBanned(), F.data.in_(["purchase__USD", "purchase__UZS"]), StateFilter(PurchaseState.balance_type))
+@users.callback_query(IsBanned, F.data.in_(["purchase__USD", "purchase__UZS"]), StateFilter(PurchaseState.balance_type))
 @create_session
 async def purchase_balance_type_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
     await state.update_data(balance_type = ("usd" if call.data.endswith("USD") else "uzs"))
@@ -36,7 +36,7 @@ async def purchase_balance_type_handler(call: types.CallbackQuery, state: FSMCon
     )
 
 
-@users.callback_query(IsBanned(), F.data.startswith("purchase__"), StateFilter(PurchaseState.package))
+@users.callback_query(IsBanned, F.data.startswith("purchase__"), StateFilter(PurchaseState.package))
 @create_session
 async def purchase_package_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
     package_id = call.data.split("__")[1]
@@ -78,7 +78,7 @@ async def purchase_package_handler(call: types.CallbackQuery, state: FSMContext,
     
 
 # Counter
-@users.callback_query(IsBanned(), F.data == "plus", StateFilter(PurchaseState.verify))
+@users.callback_query(IsBanned, F.data == "plus", StateFilter(PurchaseState.verify))
 async def purchase_counter_plus_handler(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     current = int(call.message.reply_markup.inline_keyboard[0][1].text)
@@ -91,7 +91,7 @@ async def purchase_counter_plus_handler(call: types.CallbackQuery, state: FSMCon
         )
 
 
-@users.callback_query(IsBanned(), F.data == "minus", StateFilter(PurchaseState.verify))
+@users.callback_query(IsBanned, F.data == "minus", StateFilter(PurchaseState.verify))
 async def purchase_counter_minus_handler(call: types.CallbackQuery, state: FSMContext):
     current = int(call.message.reply_markup.inline_keyboard[0][1].text)
 
@@ -100,7 +100,7 @@ async def purchase_counter_minus_handler(call: types.CallbackQuery, state: FSMCo
 
 
 # Confirm
-@users.callback_query(IsBanned(), F.data == "purchase__confirm", StateFilter(PurchaseState.verify))
+@users.callback_query(IsBanned, F.data == "purchase__confirm", StateFilter(PurchaseState.verify))
 async def purchase_confirm_handler(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
 
@@ -119,7 +119,7 @@ async def purchase_confirm_handler(call: types.CallbackQuery, state: FSMContext)
     )
 
 
-@users.callback_query(IsBanned(), F.data == "purchase__yes", StateFilter(PurchaseState.second_step_verification))
+@users.callback_query(IsBanned, F.data == "purchase__yes", StateFilter(PurchaseState.second_step_verification))
 @create_session
 async def purchase_confirm_yes_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
     data = await state.get_data()
@@ -216,7 +216,7 @@ async def purchase_confirm_yes_handler(call: types.CallbackQuery, state: FSMCont
         )
 
 
-@users.callback_query(IsBanned(), F.data == "purchase__no", StateFilter(PurchaseState.second_step_verification))
+@users.callback_query(IsBanned, F.data == "purchase__no", StateFilter(PurchaseState.second_step_verification))
 @create_session
 async def purchase_confirm_no_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
     await state.clear()

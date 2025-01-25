@@ -18,7 +18,7 @@ from db import repository as repo
 email_regexp = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'
 
 
-@users.callback_query(IsBanned(), F.data.in_(['login', 'register']), StateFilter(RegisterState.action))
+@users.callback_query(IsBanned, F.data.in_(['login', 'register']), StateFilter(RegisterState.action))
 async def action_register_handler(call: types.CallbackQuery, state: FSMContext):
     if call.data == 'register':
         await state.set_state(RegisterState.phone_number)
