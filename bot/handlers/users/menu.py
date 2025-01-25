@@ -83,4 +83,4 @@ async def back_to_menu_handler(call: types.CallbackQuery):
 # If user is banned
 @users.callback_query(IsBanned(True))
 async def if_user_banned_handler(call: types.CallbackQuery):
-    await call.message.edit_text(text = html.bold("Hech qanday haridlar topilmadi ❌"))
+    await call.message.edit_text(text = html.bold("Sizning xisobingiz administrator tomonidan ban qilingan! 🚫"))
