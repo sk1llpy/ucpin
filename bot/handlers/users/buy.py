@@ -24,58 +24,73 @@ async def menu_purchase_handler(call: types.CallbackQuery, state: FSMContext, se
     )
     
 
-@users.callback_query(IsBanned(), F.data.in_(["purchase__USD", "purchase__UZS"]), StateFilter(PurchaseState.balance_type))
+@users.callback_query(IsBanned(), F.data.in_(["purchase__USD", "purchase__UZS", "back__to_menu"]), StateFilter(PurchaseState.balance_type))
 @create_session
 async def purchase_balance_type_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
-    await state.update_data(balance_type = ("usd" if call.data.endswith("USD") else "uzs"))
-    await state.set_state(PurchaseState.package)
-    
-    await call.message.edit_text(
-        text=html.bold("Kerakli uc paketni tanlang 👇"),
-        reply_markup=await purchase.packages(call.data.split("__")[1].lower(), session)
-    )
+    if not call.data == "back__to_menu":
+        await state.update_data(balance_type = ("usd" if call.data.endswith("USD") else "uzs"))
+        await state.set_state(PurchaseState.package)
+        
+        await call.message.edit_text(
+            text=html.bold("Kerakli uc paketni tanlang 👇"),
+            reply_markup=await purchase.packages(call.data.split("__")[1].lower(), session)
+        )
+    else:
+        await call.message.edit_text(
+            text = html.bold("Kerakli bo'limni tanlang 👇"),
+            reply_markup = await menu.button()
+        )
+
+        await state.clear()
 
 
 @users.callback_query(IsBanned(), F.data.startswith("purchase__"), StateFilter(PurchaseState.package))
 @create_session
 async def purchase_package_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
-    package_id = call.data.split("__")[1]
+    if not call.data == "purchase__back_balance_type":
+        package_id = call.data.split("__")[1]
 
-    try:
-        package_id: int = int(package_id)
-    except TypeError:
-        return
+        try:
+            package_id: int = int(package_id)
+        except TypeError:
+            return
 
-    data = await state.get_data()
-    balance_type = data['balance_type']
-    
-    package_obj = await repo.UCPackagesTableRepository().get_ucpackage_by_id(
-        package_id = package_id,
-        session = session
-    )
-
-    reedem_codes = await repo.RedeemCodesTableRepository().get_active_redeem_codes_by_package_id(
-        package_id = package_id,
-        session = session
-    )
-
-    if reedem_codes:
-        await state.update_data(package_id = package_id, package = package_obj, max_count = len(reedem_codes))
-        await state.set_state(PurchaseState.verify)
+        data = await state.get_data()
+        balance_type = data['balance_type']
         
-        await call.message.edit_text(
-            text=f"""{html.bold("Siz tanlagan paket:")} {package_obj.title}
-
-{html.italic("Qolgan redeem-kod'lar soni:")} {len(reedem_codes)}""",
-            reply_markup=await purchase.counter()
+        package_obj = await repo.UCPackagesTableRepository().get_ucpackage_by_id(
+            package_id = package_id,
+            session = session
         )
 
+        reedem_codes = await repo.RedeemCodesTableRepository().get_active_redeem_codes_by_package_id(
+            package_id = package_id,
+            session = session
+        )
+
+        if reedem_codes:
+            await state.update_data(package_id = package_id, package = package_obj, max_count = len(reedem_codes))
+            await state.set_state(PurchaseState.verify)
+            
+            await call.message.edit_text(
+                text=f"""{html.bold("Siz tanlagan paket:")} {package_obj.title}
+
+    {html.italic("Qolgan redeem-kod'lar soni:")} {len(reedem_codes)}""",
+                reply_markup=await purchase.counter()
+            )
+
+        else:
+            await call.message.edit_text(
+                text = html.bold("Uzr") + ", ushbu UC paketi hozirda faol emas yoki barcha redeem-kod'lar tugagan. 😔",
+                reply_markup=await purchase.packages(balance_type, session)
+            )
     else:
+        await state.set_state(PurchaseState.balance_type)
         await call.message.edit_text(
-            text = html.bold("Uzr") + ", ushbu UC paketi hozirda faol emas yoki barcha redeem-kod'lar tugagan. 😔",
-            reply_markup=await purchase.packages(balance_type, session)
+            text=html.bold("Kerakli bo'limni tanlang 👇"),
+            reply_markup=await purchase.balance_type()
         )
-    
+
 
 # Counter
 @users.callback_query(IsBanned(), F.data == "plus", StateFilter(PurchaseState.verify))
@@ -100,23 +115,33 @@ async def purchase_counter_minus_handler(call: types.CallbackQuery, state: FSMCo
 
 
 # Confirm
-@users.callback_query(IsBanned(), F.data == "purchase__confirm", StateFilter(PurchaseState.verify))
-async def purchase_confirm_handler(call: types.CallbackQuery, state: FSMContext):
-    data = await state.get_data()
+@users.callback_query(IsBanned(), F.data.in_(["purchase__back_to_uc_package", "purchase__confirm"]), StateFilter(PurchaseState.verify))
+@create_session
+async def purchase_confirm_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
+    if not call.data == "purchase__back_to_uc_package":
+        data = await state.get_data()
 
-    balance_type = data.get('balance_type')
-    package = data.get('package')
-    current = int(call.message.reply_markup.inline_keyboard[0][1].text)
+        balance_type = data.get('balance_type')
+        package = data.get('package')
+        current = int(call.message.reply_markup.inline_keyboard[0][1].text)
 
-    total_price = (package.price_usd * current) if balance_type == 'usd' else (package.price_uzs * current)
+        total_price = (package.price_usd * current) if balance_type == 'usd' else (package.price_uzs * current)
 
-    await state.update_data(count = current, total_price = total_price)
-    await state.set_state(PurchaseState.second_step_verification)
+        await state.update_data(count = current, total_price = total_price)
+        await state.set_state(PurchaseState.second_step_verification)
 
-    await call.message.edit_text(
-        text = html.bold(f"""Siz rostdan ham {current} ta {package.title} ni {total_price} {"$" if balance_type == "usd" else "so'm"} ga harid qilmoqchimisiz?"""),
-        reply_markup = await purchase.confirm()
-    )
+        await call.message.edit_text(
+            text = html.bold(f"""Siz rostdan ham {current} ta {package.title} ni {total_price} {"$" if balance_type == "usd" else "so'm"} ga harid qilmoqchimisiz?"""),
+            reply_markup = await purchase.confirm()
+        )
+    else:
+        await state.set_state(PurchaseState.package)
+        
+        await call.message.edit_text(
+            text=html.bold("Kerakli uc paketni tanlang 👇"),
+            reply_markup=await purchase.packages(call.data.split("__")[1].lower(), session)
+        )
+        
 
 
 @users.callback_query(IsBanned(), F.data == "purchase__yes", StateFilter(PurchaseState.second_step_verification))

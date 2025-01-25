@@ -11,6 +11,9 @@ async def balance_type():
                 InlineKeyboardButton(text="💰 Redeem-code ($)", callback_data='purchase__USD'),
                 InlineKeyboardButton(text="💰 Redeem-code (so'm)", callback_data='purchase__UZS')
             ],
+            [
+                InlineKeyboardButton(text="⬅️ Orqaga", callback_data='back__to_menu')
+            ]
         ]
     )
 
@@ -26,6 +29,10 @@ async def packages(balance_type: str, session: Session):
         ] for package in uc_packages
     ]
 
+    inline_keyboard.append([
+        InlineKeyboardButton(text="⬅️ Orqaga", callback_data='purchase__back_balance_type')
+    ])
+
     return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
 
 async def counter(current: int = 1):
@@ -35,6 +42,9 @@ async def counter(current: int = 1):
                 InlineKeyboardButton(text="-", callback_data='minus'),
                 InlineKeyboardButton(text=f"{current}", callback_data=f"{current}"),
                 InlineKeyboardButton(text="+", callback_data='plus')
+            ],
+            [
+                InlineKeyboardButton(text="⬅️ Orqaga", callback_data='purchase__back_to_uc_package')
             ],
             [
                 InlineKeyboardButton(text="✅ Tasdiqlash", callback_data='purchase__confirm'),
