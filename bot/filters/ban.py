@@ -11,7 +11,7 @@ class IsBanned(Filter):
         super().__init__()
 
     @create_session
-    async def __call__(self, event: object, session: Session) -> bool:
+    async def __call__(self, event: object, session: Session, *args, **kwargs) -> bool:
         user_id = event.dict()['from']['user']
         account = await repo.UsersTableRepository().get_user_account(user_id=user_id, session=session)
 
