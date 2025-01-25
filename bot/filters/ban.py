@@ -14,5 +14,5 @@ class IsBanned(Filter):
     async def __call__(self, event: object, session: Session, *args, **kwargs) -> bool:
         user_id = event.dict()['from_user']['id']
         account = await repo.UsersTableRepository().get_user_account(user_id=user_id, session=session)
-
+            
         return account.is_banned == self.is_banned
