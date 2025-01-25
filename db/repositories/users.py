@@ -58,16 +58,19 @@ class UsersTableRepository(BaseRepository):
                 account = await repo.AccountsTableRepository().get_account(account_data, session)
                 
                 if account:
-                    self.edit(
-                        conditions={
-                            "user_id": user_id
-                        },
-                        edits={
-                            "is_logined": True,
-                            "account_id": account.id
-                        },
-                        session = session
-                    )
+                    if account.is_banned:
+                        self.edit(
+                            conditions={
+                                "user_id": user_id
+                            },
+                            edits={
+                                "is_logined": True,
+                                "account_id": account.id
+                            },
+                            session = session
+                        )
+                    else:
+                        {"error": "ACCOUNT_BANNED"}
                 else:
                     return {"error": "ACCOUNT_NOT_FOUND"}
 

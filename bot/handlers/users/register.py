@@ -149,9 +149,14 @@ async def password_login_handler(message: types.Message, state: FSMContext, sess
         session=session
     )
 
+    account = None
+
     if response:
         if response.get('error') == "ACCOUNT_NOT_FOUND":
             await message.reply(html.bold(f"Akkaunt topilmadi, {'email 'if email else 'telefon-raqam'} yoki parol mos kelmadi!"))
+            return
+        elif response.get('error') == "ACCOUNT_BANNED":
+            await message.reply(html.bold("Kirish imkonsiz! Sizning akkauntingiz administrator tomonidan ban qilingan 🚫"))
             return
     
     await message.reply(html.bold("Akkauntga muvvafaqiyatli kirildi ✅"))
