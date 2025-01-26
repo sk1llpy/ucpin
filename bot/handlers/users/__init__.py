@@ -3,3 +3,4 @@ from . import register
 from . import menu
 from . import buy
 from . import quit
+from . import top_up
