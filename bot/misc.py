@@ -28,11 +28,11 @@ payment_data = {
         },
         "bep": {
             "card_number": "0xdb12b1f9090e133f3d14ee046ca9bf96c79efb10"
-        },
-        "bybit": {
-            "card_number": "karta3 (usd)",
-            "cardholder_name": "john smith"
         }
+        # "bybit": {
+        #     "card_number": "karta3 (usd)",
+        #     "cardholder_name": "john smith"
+        # }
     },
     "uzs": {
         "uzcard": {
