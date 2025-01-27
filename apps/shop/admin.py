@@ -89,11 +89,11 @@ class TopUpAdmin(unfold.ModelAdmin):
         'amount',
         'balance_type',
         'payment_type',
-        'verified',
+        'status',
     )
     fieldsets = (
         (None, {
-            'fields': ('account', 'amount', 'balance_type', 'payment_type', 'verified')
+            'fields': ('account', 'amount', 'balance_type', 'payment_type', 'status')
         }),
         (None, {
             'fields': ('created_at', 'updated_at')
@@ -102,7 +102,7 @@ class TopUpAdmin(unfold.ModelAdmin):
     list_filter = (
         'balance_type',
         'payment_type',
-        'verified',
+        'status',
     )
     search_fields = (
         'account__email',
