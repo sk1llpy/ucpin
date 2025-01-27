@@ -90,7 +90,7 @@ class TopUp(BaseModel):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Пополнить счет - #{self.pk} ({self.account.full_name})"
+        return f"Пополнить счет - #{self.pk} ({self.account.email})"
     
     class Meta:
         verbose_name = "Пополнить счет"
