@@ -54,6 +54,6 @@ class TopUpsTable(BaseModel):
     amount: Mapped[float] = mapped_column()
     balance_type: Mapped[str] = mapped_column()
     payment_type: Mapped[str] = mapped_column()
-    verified: Mapped[bool] = mapped_column(default=False)
+    status: Mapped[str] = mapped_column(default='pending')
 
     account: Mapped["AccountsTable"] = relationship(back_populates="top_ups")

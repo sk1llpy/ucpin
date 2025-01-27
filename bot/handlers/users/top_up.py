@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from bot.decorators import create_session
 from bot.keyboards.inline import menu, top_up
-from bot.misc import bot, bot_settings, payment_data
+from bot.misc import bot, bot_settings, payment_data, payment_names
 from bot.routers import users
 from bot.states.top_up import TopUpState
 from bot.filters.ban import IsBanned
@@ -168,7 +168,7 @@ async def top_up_cheque_handler(message: types.Message, state: FSMContext, sessi
 
  -- To'lov haqida ma'lumot 👇
 
-{html.italic("💳 To'lov turi: " + str(data.get('balance_type').upper() + " — " + data.get('payment_type')))}
+{html.italic("💳 To'lov turi: " + str(data.get('balance_type').upper() + " — " + payment_names[balance_type][data.get('payment_type')]))}
 {html.italic("💰 To'lov summasi: " + str(data.get('amount')) + ("$" if data.get('balance_type').upper() == "usd" else " so'm"))}
 
  -- Akkaunt va telegram akkaunt haqida ma'lumot 👇
@@ -189,3 +189,38 @@ async def top_up_cheque_handler(message: types.Message, state: FSMContext, sessi
     )
 
     await state.clear()
+
+
+@users.callback_query(lambda call: call.data.startswith("topup_confirm__") or call.data.startswith("topup_deny__"))
+@create_session
+async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
+    topup_id = int(call.data.split("__")[1])
+    topup = await repo.TopUpsTableRepository().get_top_up(topup_id=topup_id, session=session)
+
+    if call.data.startswith("topup_confirm__"):
+        ...
+    else:
+        repo.TopUpsTableRepository().edit(conditions={"id": topup_id}, edits={"status": "denied"}, session=session)
+
+        account = await repo.AccountsTableRepository().get_account(account_data={"id": topup.account_id}, session=session)
+        user = await repo.UsersTableRepository().get_user_by_account_id(account_id=topup.account_id)
+
+        await call.message.edit_text(
+            text=f"""{html.bold("#TOP_UP")}
+
+ -- To'lov haqida ma'lumot 👇
+
+{html.italic("💳 To'lov turi: " + str(topup.balance_type.upper() + " — " + payment_names[topup.balance_type][topup.payment_type]))}
+{html.italic("💰 To'lov summasi: " + str(topup.amount) + ("$" if topup.balance_type.upper() == "usd" else " so'm"))}
+
+ -- Akkaunt va telegram akkaunt haqida ma'lumot 👇
+
+{html.italic("📞 Telefon-raqam: " + str(account.phone_number))}
+{html.italic("📧 Elektron-pochta: " + str(account.email))}
+{html.italic(call.message.text[call.message.text.index("👤"):])}
+""",
+        )
+        await bot.send_message(
+            chat_id = user.user_id,
+            text = html.bold("To'lov tasdiqlanmadi, shikoyatlaringiz bo'lsa administratorga murojaat qiling ❌")
+        )

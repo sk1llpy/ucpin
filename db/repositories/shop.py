@@ -63,6 +63,16 @@ class TopUpsTableRepository(BaseRepository):
 
         return top_up
 
+    async def get_top_up(self, topup_id: int, session: Session):
+        query = select(TopUpsTable).where(TopUpsTable.id == topup_id)
+        
+        with session:
+            top_up = (
+                session.execute(query)
+            ).scalar_one_or_none()
+
+        return top_up
+
 
 class RedeemCodesTableRepository(BaseRepository):
     table = RedeemCodesTable

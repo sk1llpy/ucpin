@@ -1,6 +1,6 @@
 from django.db import models
 from apps.general.models import BaseModel
-from apps.general.choices import BalanceTypeChoices, PaymentTypeChoices
+from apps.general.choices import BalanceTypeChoices, PaymentTypeChoices, StatusChoices
 from apps.users.models import Account
 
 # Модель UCPackage
@@ -76,7 +76,7 @@ class TopUp(BaseModel):
         choices=PaymentTypeChoices.choices,
         verbose_name="Тип платежа"
     )
-    verified = models.BooleanField(default=False, verbose_name="Проверено?")
+    status = models.CharField(default=StatusChoices.pending, choices=StatusChoices.choices, verbose_name="Статус")
 
     def save(self, *args, **kwargs):
         if self.verified:

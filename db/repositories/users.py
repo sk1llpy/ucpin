@@ -19,6 +19,16 @@ class UsersTableRepository(BaseRepository):
             ).scalar_one_or_none()
         
         return user
+
+    async def get_user_by_account_id(self, account_id: int, session: Session) -> UsersTable:
+        query = select(UsersTable).where(UsersTable.account_id == account_id)
+
+        with session:
+            user = (
+                session.execute(query)
+            ).scalar_one_or_none()
+        
+        return user
     
     async def get_user_account(self, user_id, session: Session):
         with session:

@@ -15,3 +15,8 @@ class PaymentTypeChoices(models.TextChoices):
     # UZS
     uzcard = ("uzacrd", "UzCard")
     humo = ("humo", "HUMO Card")
+
+class StatusChoices(models.TextChoices):
+    pending = ("pending", "В ожидании")
+    confirmed = ("confirmed", "Уже подтверждено")
+    denied = ("denied", "Отклонен")
