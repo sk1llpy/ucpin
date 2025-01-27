@@ -103,7 +103,7 @@ async def top_up_amount_handler(message: types.Message, state: FSMContext):
     try:
         amount = float(amount_str)
 
-        if amount > (payment_data['min_amount'] if balance_type == 'uzs' else 1):
+        if amount > (payment_data['min_amount']['uzs'] if balance_type == 'uzs' else payment_data['min_amount']['usd']):
             await state.update_data(amount = amount)
             await state.set_state(TopUpState.cheque)
 
