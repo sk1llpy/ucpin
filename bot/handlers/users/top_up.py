@@ -197,7 +197,7 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
     topup = await repo.TopUpsTableRepository().get_top_up(topup_id=topup_id, session=session)
 
     account = await repo.AccountsTableRepository().get_account(account_data={"id": topup.account_id}, session=session)
-    user = await repo.UsersTableRepository().get_user_by_account_id(account_id=topup.account_id)
+    user = await repo.UsersTableRepository().get_user_by_account_id(account_id=topup.account_id, session=session)
 
     if call.data.startswith("topup_confirm__"):
         edits = {}
