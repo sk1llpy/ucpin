@@ -155,7 +155,6 @@ async def top_up_cheque_handler(message: types.Message, state: FSMContext, sessi
             "balance_type": balance_type,
             "payment_type": payment_type,
             "amount": amount,
-            "verified": False,
             "account_id": account.id
         },
         session = session
@@ -197,16 +196,22 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
     topup_id = int(call.data.split("__")[1])
     topup = await repo.TopUpsTableRepository().get_top_up(topup_id=topup_id, session=session)
 
-    if call.data.startswith("topup_confirm__"):
-        ...
-    else:
-        repo.TopUpsTableRepository().edit(conditions={"id": topup_id}, edits={"status": "denied"}, session=session)
+    account = await repo.AccountsTableRepository().get_account(account_data={"id": topup.account_id}, session=session)
+    user = await repo.UsersTableRepository().get_user_by_account_id(account_id=topup.account_id)
 
-        account = await repo.AccountsTableRepository().get_account(account_data={"id": topup.account_id}, session=session)
-        user = await repo.UsersTableRepository().get_user_by_account_id(account_id=topup.account_id)
+    if call.data.startswith("topup_confirm__"):
+        edits = {}
+        edits['balance_usd' if topup.balance_type == 'usd' else 'balance_uzs'] = (account.balance_usd if topup.balance_type == 'usd' else account.balance_uzs) + topup.amount
+
+        repo.TopUpsTableRepository().edit(conditions={"id": topup_id}, edits={"status": "confirmed"}, session=session)
+        repo.AccountsTableRepository().edit(
+            conditions={"id": account.id},
+            edits=edits,
+            session=session
+        )
 
         await call.message.edit_text(
-            text=f"""{html.bold("#TOP_UP")}
+            text=f"""{html.bold("#TOP_UP")} #CONFIRMED ✅
 
  -- To'lov haqida ma'lumot 👇
 
@@ -220,7 +225,33 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
 {html.italic(call.message.text[call.message.text.index("👤"):])}
 """,
         )
-        await bot.send_message(
-            chat_id = user.user_id,
-            text = html.bold("To'lov tasdiqlanmadi, shikoyatlaringiz bo'lsa administratorga murojaat qiling ❌")
+
+        if user:
+            await bot.send_message(
+                chat_id = user.user_id,
+                text = html.bold(f"To'lov tasdiqlandi, hisobingiz {topup.amount} {'$' if topup.balance_type == 'usd' else ' so\'m'} ga to'ldirildi ✅")
+            )
+    else:
+        repo.TopUpsTableRepository().edit(conditions={"id": topup_id}, edits={"status": "denied"}, session=session)
+
+        await call.message.edit_text(
+            text=f"""{html.bold("#TOP_UP")} #DENIED ❌
+
+ -- To'lov haqida ma'lumot 👇
+
+{html.italic("💳 To'lov turi: " + str(topup.balance_type.upper() + " — " + payment_names[topup.balance_type][topup.payment_type]))}
+{html.italic("💰 To'lov summasi: " + str(topup.amount) + ("$" if topup.balance_type.upper() == "usd" else " so'm"))}
+
+ -- Akkaunt va telegram akkaunt haqida ma'lumot 👇
+
+{html.italic("📞 Telefon-raqam: " + str(account.phone_number))}
+{html.italic("📧 Elektron-pochta: " + str(account.email))}
+{html.italic(call.message.text[call.message.text.index("👤"):])}
+""",
         )
+
+        if user:
+            await bot.send_message(
+                chat_id = user.user_id,
+                text = html.bold("To'lov tasdiqlanmadi, shikoyatlaringiz bo'lsa administratorga murojaat qiling ❌")
+            )
