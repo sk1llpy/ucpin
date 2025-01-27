@@ -6,7 +6,7 @@ async def balance_type():
         inline_keyboard = [
             [
                 InlineKeyboardButton(text = "💰 USD Balans", callback_data="topup__USD"),
-                InlineKeyboardButton(text = "💰 USD Balans", callback_data="topup__UZS"),
+                InlineKeyboardButton(text = "💰 UZS Balans", callback_data="topup__UZS"),
             ],
             [
                 InlineKeyboardButton(text="⬅️ Orqaga", callback_data='back__to_menu')
