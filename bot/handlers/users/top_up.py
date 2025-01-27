@@ -161,6 +161,7 @@ async def top_up_cheque_handler(message: types.Message, state: FSMContext, sessi
     )
 
     await bot.send_photo(
+        chat_id = bot_settings.admin_group,
         photo = photo,
         caption = f"""{html.bold("#TOP_UP")}
 
