@@ -46,7 +46,7 @@ async def top_up_balance_type_handler(call: types.CallbackQuery, state: FSMConte
 
 @users.callback_query(IsBanned(), lambda call: str(call.data).startswith("topup__"), StateFilter(TopUpState.payment_type))
 @create_session
-async def top_up_balance_type_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
+async def top_up_payment_type_handler(call: types.CallbackQuery, state: FSMContext, session: Session):
     if not call.data == "topup__back_to_balance_type":
         data = await state.get_data()
         balance_type = data.get("balance_type")
