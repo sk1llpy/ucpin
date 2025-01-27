@@ -1,6 +1,6 @@
 from django.contrib import admin
 from unfold import admin as unfold
-from .models import UCPackage, RedeemCode, Purchase
+from .models import UCPackage, RedeemCode, Purchase, TopUp
 from apps.users.models import User
 
 
@@ -70,6 +70,9 @@ class PurchaseAdmin(unfold.ModelAdmin):
         (None, {
             'fields': ('account', 'redeem_code', 'balance_type')
         }),
+        (None, {
+            'fields': ('created_at', 'updated_at')
+        })
     )
 
     def __str__(self):
@@ -80,7 +83,36 @@ class PurchaseAdmin(unfold.ModelAdmin):
         verbose_name_plural = 'Покупки'
 
 
+class TopUpAdmin(unfold.ModelAdmin):
+    list_display = (
+        'account',
+        'amount',
+        'balance_type',
+        'payment_type',
+        'verified',
+    )
+    fieldsets = (
+        (None, {
+            'fields': ('account', 'amount', 'balance_type', 'payment_type', 'verified')
+        }),
+        (None, {
+            'fields': ('created_at', 'updated_at')
+        })
+    )
+    list_filter = (
+        'balance_type',
+        'payment_type',
+        'verified',
+    )
+    search_fields = (
+        'account__email',
+        'account__phone_number',
+    )
+    ordering = ('-created_at',)
+
+
 # Регистрация моделей с их кастомными админами
 admin.site.register(UCPackage, UCPackageAdmin)
 admin.site.register(RedeemCode, RedeemCodeAdmin)
 admin.site.register(Purchase, PurchaseAdmin)
+admin.site.register(TopUp, TopUpAdmin)

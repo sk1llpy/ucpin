@@ -138,3 +138,44 @@ async def top_up_back_to_amount_handler(call: types.CallbackQuery, state: FSMCon
         reply_markup = await top_up.back('payment_type')
     )
 
+
+@users.message(F.content_type == types.ContentType.PHOTO, StateFilter(TopUpState.cheque))
+@create_session
+async def top_up_cheque_handler(message: types.Message, state: FSMContext, session: Session):
+    photo = message.photo[-1].file_id
+
+    data = await state.get_data()
+    balance_type = data.get('balance_type')
+    payment_type = data.get('payment_type')
+    amount = data.get('amount')
+
+    account = await repo.UsersTableRepository().get_user_account(user_id=message.from_user.id, session=session)
+    payment = await repo.TopUpsTableRepository().create_top_up(
+        data = {
+            "balance_type": balance_type,
+            "payment_type": payment_type,
+            "amount": amount,
+            "verified": False,
+            "account_id": account.id
+        }
+    )
+
+    await bot.send_photo(
+        photo = photo,
+        caption = f"""{html.bold("#TOP_UP")}
+
+ -- To'lov haqida ma'lumot 👇
+
+{html.italic("💳 To'lov turi: " + str(data.get('balance_type').upper() + " — " + data.get('payment_type')))}
+{html.italic("💰 To'lov summasi: " + str(data.get('amount') + ("$" if data.get('balance_type').upper() == "usd" else " so'm")))}
+
+ -- Akkaunt va telegram akkaunt haqida ma'lumot 👇
+
+{html.italic("📞 Telefon-raqam: " + str(account.phone_number))}
+{html.italic("📧 Elektron-pochta: " + str(account.email))}
+{html.italic("👤 To'liq ismi: " + message.from_user.full_name)}
+{html.italic("🆔 Telegram ID: " + str(message.from_user.id))}
+{html.italic("👤 Username: " + "@" + str(message.from_user.username))}
+""",
+        reply_markup = await top_up.confirm_admin(payment.id)
+    )

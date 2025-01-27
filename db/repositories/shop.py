@@ -58,6 +58,11 @@ class PurchasesTableRepository(BaseRepository):
 class TopUpsTableRepository(BaseRepository):
     table = TopUpsTable
 
+    async def create_top_up(self, data: dict, session: Session):
+        top_up = self.create(params=data, session=session)
+
+        return top_up
+
 
 class RedeemCodesTableRepository(BaseRepository):
     table = RedeemCodesTable

@@ -1,6 +1,6 @@
 from django.db import models
 from apps.general.models import BaseModel
-from apps.general.choices import BalanceTypeChoices
+from apps.general.choices import BalanceTypeChoices, PaymentTypeChoices
 from apps.users.models import Account
 
 # Модель UCPackage
@@ -67,8 +67,14 @@ class TopUp(BaseModel):
     balance_type = models.CharField(
         max_length=255, 
         blank=True, null=True, 
-        choices=BalanceTypeChoices, 
+        choices=BalanceTypeChoices.choices, 
         verbose_name="Тип баланса"
+    )
+    payment_type = models.CharField(
+        max_length=255,
+        blank=True, null=True,
+        choices=PaymentTypeChoices.choices,
+        verbose_name="Тип платежа"
     )
     verified = models.BooleanField(default=False, verbose_name="Проверено?")
 
