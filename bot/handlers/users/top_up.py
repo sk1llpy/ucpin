@@ -181,3 +181,11 @@ async def top_up_cheque_handler(message: types.Message, state: FSMContext, sessi
 """,
         reply_markup = await top_up.confirm_admin(payment.id)
     )
+
+    await message.answer(text=html.bold("To'lov haqidagi ma'lumotlar adminlarga yuborildi! Tez orada balansingizga pul to'ldiriladi ⏳"))
+    await message.answer(
+        text = html.bold("Kerakli bo'limni tanlang 👇"),
+        reply_markup = await menu.button()
+    )
+
+    await state.clear()
