@@ -108,6 +108,7 @@ class TopUpAdmin(unfold.ModelAdmin):
         'account__email',
         'account__phone_number',
     )
+    readonly_fields = ('created_at', 'updated_at')
     ordering = ('-created_at',)
 
 
