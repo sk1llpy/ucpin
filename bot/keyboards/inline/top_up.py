@@ -1,5 +1,5 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from bot.misc import payment_data
+from bot.misc import payment_data, payment_names
 
 async def balance_type():
     return InlineKeyboardMarkup(
@@ -18,7 +18,7 @@ async def balance_type():
 async def payment_type(balance_type: str):
     inline_keyboard = [
         [
-            InlineKeyboardButton(text = f"💳 {payment}", callback_data = f"topup__{payment}")
+            InlineKeyboardButton(text = f"💳 {payment_names[balance_type][payment]}", callback_data = f"topup__{payment}")
         ] for payment in list(payment_data[balance_type].keys())
     ]
 

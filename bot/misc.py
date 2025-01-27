@@ -19,38 +19,50 @@ bot = Bot(
 )
 payment_data = {
     "usd": {
-        "tolov1": {
+        "binance": {
             "card_number": "karta1 (usd)",
             "cardholder_name": "john smith",
             "phone_number": "+998 77-777-77-77"
         },
-        "tolov2": {
+        "trc": {
             "card_number": "karta2 (usd)",
             "cardholder_name": "john smith",
             "phone_number": "+998 88-888-88-88"
         },
-        "tolov3": {
+        "bep": {
             "card_number": "karta3 (usd)",
             "cardholder_name": "john smith",
             "phone_number": "+998 99-999-99-99"
+        },
+        "bybit": {
+            "card_number": "karta3 (usd)",
+            "cardholder_name": "john smith",
+            "phone_number": "+998 20-000-00-00"
         }
     },
     "uzs": {
-        "tolov1": {
+        "uzcard": {
             "card_number": "karta1 (uzs)",
             "cardholder_name": "john smith"
         },
-        "tolov2": {
+        "humo": {
             "card_number": "karta2 (uzs)"
-        },
-        "tolov3": {
-            "card_number": "karta3 (uzs)",
-            "cardholder_name": "john smith",
-            "phone_number": "+998 33-333-33-33"
         }
     },
     "min_amount": {
         "usd": 5,
         "uzs": 10000
+    }
+}
+payment_names = {
+    "usd": {
+        "binance": "Binance Pay",
+        "trc": "TRC20",
+        "bep": "BEP20",
+        "bybit": "Bybit"
+    },
+    "uzs": {
+        "uzcard": "UzCard",
+        "humo": "HUMO Card"
     }
 }
