@@ -38,3 +38,13 @@ async def confirm_admin(topup_id: int):
             ]
         ]
     )
+
+
+async def back(to: str):
+    return InlineKeyboardMarkup(
+        inline_keyboard = [
+            [
+                InlineKeyboardButton(text="⬅️ Orqaga", callback_data=f'topup__back_to_{to}')
+            ]
+        ]
+    )

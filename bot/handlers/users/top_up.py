@@ -58,21 +58,83 @@ async def top_up_payment_type_handler(call: types.CallbackQuery, state: FSMConte
             text = f"""{html.bold("💳 Karta (hisob) raqam:")} {html.code(card['card_number'])}"""
 
             if card.get('cardholder_name'):
-                text += f"""\n👤 Ism-familya: {card.get('cardholder_name')}"""
+                text += f"""\n{html.bold("👤 Ism-familya: ") + card.get('cardholder_name')}"""
 
             if card.get('phone_number'):
-                text += f"""\n📞 Telefon-raqam: {card.get('phone_number')}"""
+                text += f"""\n{html.bold("📞 Telefon-raqam: " + card.get('phone_number'))}"""
 
+            await state.update_data(payment_type = payment_type)
             await state.set_state(TopUpState.amount)
-            await call.message.edit_text(
+            msg = await call.message.edit_text(
                 text = f"""{text}
 
 {html.italic("Ushbu kartaga to'lov qilganingizdan so'ng to'lov summasini kiriting!")}
-{html.italic("Masalan: " + ("100000 (orasiga nuqta qoyib yozish mumkin emas, minimal summa: 10000)" if balance_type == 'uzs' else '5 yoki 5.20 (nuqta orqali centlarni kiritish mumkin, minimal summa: 1)'))}."""
+{html.italic("Masalan: " + (f"100000 (orasiga nuqta qoyib yozish mumkin emas, minimal summa: {payment_data['min_amount']['uzs']})" if balance_type == 'uzs' else f'5 yoki 5.20 (nuqta orqali centlarni kiritish mumkin, minimal summa: {payment_data["min_amount"]["usd"]})'))}.""",
+                reply_markup = await top_up.back('payment_type')
             )
+
+            await state.update_data(text = msg.text)
     else:
         await state.set_state(TopUpState.balance_type)
         await call.message.edit_text(
             text = html.bold("Kerakli balans turini tanlang tanlang 👇"),
             reply_markup = await top_up.balance_type()
         )
+
+
+@users.callback_query(IsBanned(), F.data == 'back__to_payment_type', StateFilter(TopUpState.amount))
+async def top_up_back_to_payment_type_handler(call: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    balance_type = data.get('balance_type')
+
+    await state.set_state(TopUpState.payment_type)
+    await call.message.edit_text(
+        text = html.bold("Kerakli tolov turini tanlang 👇"),
+        reply_markup = await top_up.payment_type(balance_type)
+    )
+
+
+@users.message(F.content_type == types.ContentType.TEXT, StateFilter(TopUpState.amount))
+async def top_up_amount_handler(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    balance_type = data.get('balance_type')
+    amount_str = message.text
+
+    try:
+        amount = float(amount_str)
+
+        if amount > (payment_data['min_amount'] if balance_type == 'uzs' else 1):
+            await state.update_data(amount = amount)
+            await state.set_state(TopUpState.cheque)
+
+            await message.reply(text=html.bold("Ma'lumot qa'bul qilindi ✅"))
+            await message.answer(
+                text = f"""{html.bold("To'lov chekini yuboring 🧾")}
+
+{html.italic("Telegram-bot chekni faqatgina rasm ko'rinishida qabul qiladi, havola yoki fayl korinishidagi chek qabul qilinmaydi ⚠️")}""",
+                reply_markup = await top_up.back("amount")
+            )
+        else:
+            await message.reply(
+                text = html.bold("Siz minimal summadan kam miqdor kiritdingiz ❌"),
+                reply_markup = await top_up.back('payment_type')
+            )
+    except:
+        await message.answer(
+            text = html.bold("Siz noto'g'ri formatda kiritdingiz, iltimos qaytadan kiriting ❌"),
+            reply_markup = await top_up.back('payment_type')
+        )
+
+
+@users.callback_query(IsBanned(), F.data == 'back__to_amount', StateFilter(TopUpState.amount))
+async def top_up_back_to_payment_type_handler(call: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    balance_type = data.get('balance_type')
+    text = data.get('text')
+
+    await state.set_state(TopUpState.amount)
+    await call.message.edit_text(
+        text = text,
+        reply_markup = await top_up.back('payment_type')
+    )
+

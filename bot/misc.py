@@ -48,5 +48,9 @@ payment_data = {
             "cardholder_name": "john smith",
             "phone_number": "+998 33-333-33-33"
         }
+    },
+    "min_amount": {
+        "usd": 5,
+        "uzs": 10000
     }
 }
