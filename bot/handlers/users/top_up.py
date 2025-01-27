@@ -198,6 +198,7 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
 
     account = await repo.AccountsTableRepository().get_account(account_data={"id": topup.account_id}, session=session)
     user = await repo.UsersTableRepository().get_user_by_account_id(account_id=topup.account_id, session=session)
+    msg = call.message
 
     if call.data.startswith("topup_confirm__"):
         edits = {}
@@ -222,7 +223,7 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
 
 {html.italic("📞 Telefon-raqam: " + str(account.phone_number))}
 {html.italic("📧 Elektron-pochta: " + str(account.email))}
-{html.italic(call.message.text[call.message.text.index("👤"):])}
+{html.italic(msg.text[msg.text.index("👤"):])}
 """,
         )
 
@@ -246,7 +247,7 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
 
 {html.italic("📞 Telefon-raqam: " + str(account.phone_number))}
 {html.italic("📧 Elektron-pochta: " + str(account.email))}
-{html.italic(call.message.text[call.message.text.index("👤"):])}
+{html.italic(msg.text[msg.text.index("👤"):])}
 """,
         )
 
