@@ -169,7 +169,7 @@ async def top_up_cheque_handler(message: types.Message, state: FSMContext, sessi
  -- To'lov haqida ma'lumot 👇
 
 {html.italic("💳 To'lov turi: " + str(data.get('balance_type').upper() + " — " + data.get('payment_type')))}
-{html.italic("💰 To'lov summasi: " + str(data.get('amount') + ("$" if data.get('balance_type').upper() == "usd" else " so'm")))}
+{html.italic("💰 To'lov summasi: " + str(data.get('amount')) + ("$" if data.get('balance_type').upper() == "usd" else " so'm"))}
 
  -- Akkaunt va telegram akkaunt haqida ma'lumot 👇
 
