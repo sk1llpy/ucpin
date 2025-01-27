@@ -112,6 +112,16 @@ class AccountsTableRepository(BaseRepository):
         
         return account
     
+    async def get_account_by_id(self, account_id: int, session: Session):
+        query = select(AccountsTable).where(AccountsTable.id == account_id)
+
+        with session:
+            account = (
+                session.execute(query)
+            ).scalar_one_or_none()
+        
+        return account
+    
     async def check_email_exists(self, email: str, session: Session):
         query = select(AccountsTable).where(AccountsTable.email == email)
         
