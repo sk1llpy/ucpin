@@ -17,3 +17,36 @@ bot = Bot(
         parse_mode = ParseMode.HTML
     )
 )
+payment_data = {
+    "usd": {
+        "tolov1 (usd)": {
+            "card_number": "karta1 (usd)",
+            "cardholder_name": "john smith",
+            "phone_number": "+998 77-777-77-77"
+        },
+        "tolov2 (usd)": {
+            "card_number": "karta2 (usd)",
+            "cardholder_name": "john smith",
+            "phone_number": "+998 88-888-88-88"
+        },
+        "tolov3 (usd)": {
+            "card_number": "karta3 (usd)",
+            "cardholder_name": "john smith",
+            "phone_number": "+998 99-999-99-99"
+        }
+    },
+    "uzs": {
+        "tolov1 (uzs)": {
+            "card_number": "karta1 (uzs)",
+            "cardholder_name": "john smith"
+        },
+        "tolov2 (uzs)": {
+            "card_number": "karta2 (uzs)"
+        },
+        "tolov3 (uzs)": {
+            "card_number": "karta3 (uzs)",
+            "cardholder_name": "john smith",
+            "phone_number": "+998 33-333-33-33"
+        }
+    }
+}

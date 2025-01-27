@@ -73,7 +73,7 @@ async def menu_purchase_history_handler(call: types.CallbackQuery, session: Sess
 
 # Back to menu
 @users.callback_query(IsBanned(), F.data == 'back__to_menu')
-async def back_to_menu_handler(call: types.CallbackQuery):
+async def back_to_menu_handler(call: types.CallbackQuery, state: FSMContext):
     await call.message.edit_text(
         text = html.bold("Kerakli bo'limni tanlang 👇"),
         reply_markup = await menu.button()
