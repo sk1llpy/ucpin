@@ -211,8 +211,8 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
             session=session
         )
 
-        await call.message.edit_text(
-            text=f"""{html.bold("#TOP_UP")} #CONFIRMED ✅
+        await call.message.edit_caption(
+            caption=f"""{html.bold("#TOP_UP")} #CONFIRMED ✅
 
  -- To'lov haqida ma'lumot 👇
 
@@ -224,7 +224,7 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
 {html.italic("📞 Telefon-raqam: " + str(account.phone_number))}
 {html.italic("📧 Elektron-pochta: " + str(account.email))}
 {html.italic(msg.caption[msg.caption.index("👤"):])}
-""",
+"""
         )
 
         if user:
@@ -235,8 +235,8 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
     else:
         repo.TopUpsTableRepository().edit(conditions={"id": topup_id}, edits={"status": "denied"}, session=session)
 
-        await call.message.edit_text(
-            text=f"""{html.bold("#TOP_UP")} #DENIED ❌
+        await call.message.edit_caption(
+            caption=f"""{html.bold("#TOP_UP")} #DENIED ❌
 
  -- To'lov haqida ma'lumot 👇
 
