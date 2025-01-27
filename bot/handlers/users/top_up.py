@@ -223,7 +223,7 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
 
 {html.italic("📞 Telefon-raqam: " + str(account.phone_number))}
 {html.italic("📧 Elektron-pochta: " + str(account.email))}
-{html.italic(msg.text[msg.text.index("👤"):])}
+{html.italic(msg.caption[msg.caption.index("👤"):])}
 """,
         )
 
@@ -247,7 +247,7 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
 
 {html.italic("📞 Telefon-raqam: " + str(account.phone_number))}
 {html.italic("📧 Elektron-pochta: " + str(account.email))}
-{html.italic(msg.text[msg.text.index("👤"):])}
+{html.italic(msg.caption[msg.caption.index("👤"):])}
 """,
         )
 
