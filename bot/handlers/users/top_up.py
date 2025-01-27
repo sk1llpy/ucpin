@@ -55,10 +55,11 @@ async def top_up_payment_type_handler(call: types.CallbackQuery, state: FSMConte
         if payment_type in list(payment_data[balance_type].keys()):
             card = payment_data[balance_type][payment_type]
 
-            text = f"""{html.bold("💳 Karta (hisob) raqam:  ")} {html.code(card['card_number'])}"""
+            text = f"""{html.bold("💰 To'lov turi: ")} {html.bold(balance_type)} / {html.bold(payment_names[balance_type][payment_type])}
+{html.bold("💳 Karta (hisob) raqam:  ")} {html.code(card['card_number'])}"""
 
             if card.get('cardholder_name'):
-                text += f"""\n{html.bold("👤 Ism-familya:  ") + card.get('cardholder_name')}"""
+                text += f"""\n{html.bold("👤 Ism-familya (nikneym):  ") + card.get('cardholder_name')}"""
 
             if card.get('phone_number'):
                 text += f"""\n{html.bold("📞 Telefon-raqam:  " + card.get('phone_number'))}"""
@@ -69,7 +70,7 @@ async def top_up_payment_type_handler(call: types.CallbackQuery, state: FSMConte
                 text = f"""{text}
 
 {html.italic("Ushbu kartaga to'lov qilganingizdan so'ng to'lov summasini kiriting!")}
-{html.italic("Masalan: " + (f"100000 (orasiga nuqta qoyib yozish mumkin emas, minimal summa: {payment_data['min_amount']['uzs']})" if balance_type == 'uzs' else f'5 yoki 5.20 (nuqta orqali centlarni kiritish mumkin, minimal summa: {payment_data["min_amount"]["usd"]})'))}.""",
+{html.italic("Masalan: " + (f"600000 (orasiga nuqta qoyib yozish mumkin emas, minimal summa: {payment_data['min_amount']['uzs']})" if balance_type == 'uzs' else f'12 yoki 15.20 (nuqta orqali centlarni kiritish mumkin, minimal summa: {payment_data["min_amount"]["usd"]})'))}.""",
                 reply_markup = await top_up.back('payment_type')
             )
 
@@ -212,7 +213,7 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
         )
 
         await call.message.edit_caption(
-            caption=f"""{html.bold("#TOP_UP")} #CONFIRMED ✅
+            caption=f"""{html.bold("#TOP_UP")} {html.bold("#CONFIRMED")} ✅
 
  -- To'lov haqida ma'lumot 👇
 
@@ -236,7 +237,7 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
         repo.TopUpsTableRepository().edit(conditions={"id": topup_id}, edits={"status": "denied"}, session=session)
 
         await call.message.edit_caption(
-            caption=f"""{html.bold("#TOP_UP")} #DENIED ❌
+            caption=f"""{html.bold("#TOP_UP")} {html.bold("#DENIED")} ❌
 
  -- To'lov haqida ma'lumot 👇
 

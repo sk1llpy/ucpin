@@ -20,38 +20,35 @@ bot = Bot(
 payment_data = {
     "usd": {
         "binance": {
-            "card_number": "karta1 (usd)",
-            "cardholder_name": "john smith",
-            "phone_number": "+998 77-777-77-77"
+            "card_number": "524055065",
+            "cardholder_name": "Shaxboz GG"
         },
         "trc": {
-            "card_number": "karta2 (usd)",
-            "cardholder_name": "john smith",
-            "phone_number": "+998 88-888-88-88"
+            "card_number": "TBrePv2vXp6LiAKkhU1vRhsj2HFrfM1N8f"
         },
         "bep": {
-            "card_number": "karta3 (usd)",
-            "cardholder_name": "john smith",
-            "phone_number": "+998 99-999-99-99"
+            "card_number": "0xdb12b1f9090e133f3d14ee046ca9bf96c79efb10"
         },
         "bybit": {
             "card_number": "karta3 (usd)",
-            "cardholder_name": "john smith",
-            "phone_number": "+998 20-000-00-00"
+            "cardholder_name": "john smith"
         }
     },
     "uzs": {
         "uzcard": {
-            "card_number": "karta1 (uzs)",
-            "cardholder_name": "john smith"
+            "card_number": "5440 8100 0528 0127",
+            "cardholder_name": "Abduxalil Babamuradov",
+            "phone_number": "+998994033004"
         },
         "humo": {
-            "card_number": "karta2 (uzs)"
+            "card_number": "9860 1866 0157 1117",
+            "cardholder_name": "Abduxalil Babamuradov",
+            "phone_number": "+998994033004"
         }
     },
     "min_amount": {
-        "usd": 5,
-        "uzs": 10000
+        "usd": 10,
+        "uzs": 500000
     }
 }
 payment_names = {
