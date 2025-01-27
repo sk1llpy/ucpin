@@ -55,7 +55,7 @@ async def top_up_payment_type_handler(call: types.CallbackQuery, state: FSMConte
         if payment_type in list(payment_data[balance_type].keys()):
             card = payment_data[balance_type][payment_type]
 
-            text = f"""{html.bold("💰 To'lov turi: ")} {html.bold(balance_type)} / {html.bold(payment_names[balance_type][payment_type])}
+            text = f"""{html.bold("💰 To'lov turi: ")} {html.bold(str(balance_type).upper())} / {html.bold(payment_names[balance_type][payment_type])}
 {html.bold("💳 Karta (hisob) raqam:  ")} {html.code(card['card_number'])}"""
 
             if card.get('cardholder_name'):
