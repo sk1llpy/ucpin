@@ -157,7 +157,8 @@ async def top_up_cheque_handler(message: types.Message, state: FSMContext, sessi
             "amount": amount,
             "verified": False,
             "account_id": account.id
-        }
+        },
+        session = session
     )
 
     await bot.send_photo(
