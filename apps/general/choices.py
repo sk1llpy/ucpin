@@ -7,11 +7,11 @@ class BalanceTypeChoices(models.TextChoices):
 
 class PaymentTypeChoices(models.TextChoices):
     # USD
-    tolov1 = ("tolov 1 (usd)", "tolov 1 (usd)")
-    tolov2 = ("tolov 2 (usd)", "tolov 2 (usd)")
-    tolov3 = ("tolov 3 (usd)", "tolov 3 (usd)")
+    tolov1 = ("tolov 1", "tolov 1 (usd)")
+    tolov2 = ("tolov 2", "tolov 2 (usd)")
+    tolov3 = ("tolov 3", "tolov 3 (usd)")
 
     # UZS
-    tolov1 = ("tolov 1 (uzs)", "tolov 1 (uzs)")
-    tolov2 = ("tolov 2 (uzs)", "tolov 2 (uzs)")
-    tolov3 = ("tolov 3 (uzs)", "tolov 3 (uzs)")
+    tolov1 = ("tolov 1", "tolov 1 (uzs)")
+    tolov2 = ("tolov 2", "tolov 2 (uzs)")
+    tolov3 = ("tolov 3", "tolov 3 (uzs)")
