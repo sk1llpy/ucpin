@@ -55,13 +55,13 @@ async def top_up_payment_type_handler(call: types.CallbackQuery, state: FSMConte
         if payment_type in list(payment_data[balance_type].keys()):
             card = payment_data[balance_type][payment_type]
 
-            text = f"""{html.bold("💳 Karta (hisob) raqam:")} {html.code(card['card_number'])}"""
+            text = f"""{html.bold("💳 Karta (hisob) raqam:  ")} {html.code(card['card_number'])}"""
 
             if card.get('cardholder_name'):
-                text += f"""\n{html.bold("👤 Ism-familya: ") + card.get('cardholder_name')}"""
+                text += f"""\n{html.bold("👤 Ism-familya:  ") + card.get('cardholder_name')}"""
 
             if card.get('phone_number'):
-                text += f"""\n{html.bold("📞 Telefon-raqam: " + card.get('phone_number'))}"""
+                text += f"""\n{html.bold("📞 Telefon-raqam:  " + card.get('phone_number'))}"""
 
             await state.update_data(payment_type = payment_type)
             await state.set_state(TopUpState.amount)
@@ -103,7 +103,7 @@ async def top_up_amount_handler(message: types.Message, state: FSMContext):
     try:
         amount = float(amount_str)
 
-        if amount > (payment_data['min_amount']['uzs'] if balance_type == 'uzs' else payment_data['min_amount']['usd']):
+        if amount >= (payment_data['min_amount']['uzs'] if balance_type == 'uzs' else payment_data['min_amount']['usd']):
             await state.update_data(amount = amount)
             await state.set_state(TopUpState.cheque)
 
@@ -126,8 +126,8 @@ async def top_up_amount_handler(message: types.Message, state: FSMContext):
         )
 
 
-@users.callback_query(IsBanned(), F.data == 'topup__back_to_amount', StateFilter(TopUpState.amount))
-async def top_up_back_to_payment_type_handler(call: types.CallbackQuery, state: FSMContext):
+@users.callback_query(IsBanned(), F.data == 'topup__back_to_amount', StateFilter(TopUpState.cheque))
+async def top_up_back_to_amount_handler(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     balance_type = data.get('balance_type')
     text = data.get('text')
