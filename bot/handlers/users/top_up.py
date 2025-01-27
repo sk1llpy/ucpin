@@ -82,7 +82,7 @@ async def top_up_payment_type_handler(call: types.CallbackQuery, state: FSMConte
         )
 
 
-@users.callback_query(IsBanned(), F.data == 'back__to_payment_type', StateFilter(TopUpState.amount))
+@users.callback_query(IsBanned(), F.data == 'topup__back_to_payment_type', StateFilter(TopUpState.amount))
 async def top_up_back_to_payment_type_handler(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     balance_type = data.get('balance_type')
@@ -126,7 +126,7 @@ async def top_up_amount_handler(message: types.Message, state: FSMContext):
         )
 
 
-@users.callback_query(IsBanned(), F.data == 'back__to_amount', StateFilter(TopUpState.amount))
+@users.callback_query(IsBanned(), F.data == 'topup__back_to_amount', StateFilter(TopUpState.amount))
 async def top_up_back_to_payment_type_handler(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     balance_type = data.get('balance_type')
