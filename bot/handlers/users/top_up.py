@@ -229,7 +229,7 @@ async def top_up_admin_handler(call: types.CallbackQuery, session: Session):
         if user:
             await bot.send_message(
                 chat_id = user.user_id,
-                text = html.bold(f"To'lov tasdiqlandi, hisobingiz {topup.amount} {'$' if topup.balance_type == 'usd' else ' so\'m'} ga to'ldirildi ✅")
+                text = html.bold(f"""To'lov tasdiqlandi, hisobingiz {topup.amount} {'$' if topup.balance_type == 'usd' else " so'm"} ga to'ldirildi ✅""")
             )
     else:
         repo.TopUpsTableRepository().edit(conditions={"id": topup_id}, edits={"status": "denied"}, session=session)
