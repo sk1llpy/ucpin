@@ -65,7 +65,7 @@ class BaseUserAdmin(unfold.ModelAdmin):
     ordering = ("-date_joined",)
 
     fieldsets = (
-        (_("Личная информация"), {"fields": ("username", "email", "first_name", "last_name")}),
+        (_("Личная информация"), {"fields": ("username", "email", "first_name", "last_name", "password")}),
         (_("Статус и права доступа"), {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         (_("Важные даты"), {"fields": ("last_login", "date_joined")}),
     )
@@ -78,12 +78,6 @@ class BaseUserAdmin(unfold.ModelAdmin):
     )
 
     readonly_fields = ("last_login", "date_joined")
-
-    def save_model(self, request, obj, form, change):
-        """Устанавливаем пароль корректно при создании пользователя"""
-        if not change and obj.password:
-            obj.set_password(obj.password)
-        super().save_model(request, obj, form, change)
 
 # Регистрация моделей с кастомными интерфейсами администратора
 admin.site.register(User, UserAdmin)
