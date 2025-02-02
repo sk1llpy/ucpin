@@ -65,7 +65,8 @@ class BaseUserAdmin(unfold.ModelAdmin):
     ordering = ("-date_joined",)
 
     fieldsets = (
-        (_("Личная информация"), {"fields": ("username", "email", "first_name", "last_name", "password")}),
+        (_("Личная информация"), {"fields": ("username", "email", "first_name", "last_name")}),
+        (_("Конфиденциальность данных"), {"fields": ("password", )})
         (_("Статус и права доступа"), {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         (_("Важные даты"), {"fields": ("last_login", "date_joined")}),
     )
@@ -75,6 +76,9 @@ class BaseUserAdmin(unfold.ModelAdmin):
             "classes": ("wide",),
             "fields": ("username", "email", "first_name", "last_name"),
         }),
+        (_("Конфиденциальность данных"), {
+            "fields": ("password", )
+        })
     )
 
     readonly_fields = ("last_login", "date_joined")
