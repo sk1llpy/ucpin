@@ -74,10 +74,7 @@ class BaseUserAdmin(unfold.ModelAdmin):
     add_fieldsets = (
         (_("Создание пользователя"), {
             "classes": ("wide",),
-            "fields": ("username", "email", "first_name", "last_name"),
-        }),
-        (_("Конфиденциальность данных"), {
-            "fields": ("password", )
+            "fields": ("username", "email", "first_name", "last_name" "password"),
         }),
     )
 
