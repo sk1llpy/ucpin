@@ -73,11 +73,17 @@ class BaseUserAdmin(unfold.ModelAdmin):
     add_fieldsets = (
         (_("Создание пользователя"), {
             "classes": ("wide",),
-            "fields": ("username", "email", "first_name", "last_name", "password1", "password2"),
+            "fields": ("username", "email", "first_name", "last_name"),
         }),
     )
 
     readonly_fields = ("last_login", "date_joined")
+
+    def save_model(self, request, obj, form, change):
+        """Устанавливаем пароль корректно при создании пользователя"""
+        if not change and obj.password:
+            obj.set_password(obj.password)
+        super().save_model(request, obj, form, change)
 
 # Регистрация моделей с кастомными интерфейсами администратора
 admin.site.register(User, UserAdmin)
