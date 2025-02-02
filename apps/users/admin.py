@@ -83,6 +83,13 @@ class BaseUserAdmin(unfold.ModelAdmin):
 
     readonly_fields = ("last_login", "date_joined")
 
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.set_password(obj.password)
+        super().save_model(request, obj, form, change)
+
+        return super().save_model(request, obj, form, change)
+
 # Регистрация моделей с кастомными интерфейсами администратора
 admin.site.register(User, UserAdmin)
 admin.site.register(Account, AccountAdmin)
