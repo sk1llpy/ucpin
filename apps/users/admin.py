@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User as BaseUser
 from django.contrib.auth.models import Group as BaseGroup
+from django.utils.translation import gettext_lazy as _
 
 from unfold import admin as unfold
 from .models import User, Admin, Account
@@ -57,9 +58,39 @@ class AdminAdmin(unfold.ModelAdmin):
         }),
     )
 
+class BaseUserAdmin(unfold.ModelAdmin):
+    list_display = ("id", "full_name", "email", "phone_number", "is_active", "is_staff", "is_superuser")
+    list_filter = ("is_active", "is_staff", "is_superuser", "date_joined")
+    search_fields = ("email", "full_name", "phone_number")
+    ordering = ("-date_joined",)
+    
+    fieldsets = (
+        (_("Личная информация"), {"fields": ("full_name", "email", "phone_number", "image")}),
+        (_("Разрешения"), {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        (_("Важные даты"), {"fields": ("last_login", "date_joined")}),
+    )
+    
+    add_fieldsets = (
+        (_("Создание пользователя"), {
+            "classes": ("wide",),
+            "fields": ("full_name", "email", "phone_number", "password1", "password2"),
+        }),
+    )
+    
+    readonly_fields = ("last_login", "date_joined")
+
 # Регистрация моделей с кастомными интерфейсами администратора
 admin.site.register(User, UserAdmin)
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Admin, AdminAdmin)
 
 admin.site.unregister(BaseGroup)
+admin.site.unregister(BaseUser)
+
+admin.site.register(BaseUser, BaseUserAdmin)
+
+
+
+
+
+
