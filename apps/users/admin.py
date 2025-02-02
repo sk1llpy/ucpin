@@ -78,7 +78,7 @@ class BaseUserAdmin(unfold.ModelAdmin):
         }),
         (_("Конфиденциальность данных"), {
             "fields": ("password", )
-        })
+        }),
     )
 
     readonly_fields = ("last_login", "date_joined")
