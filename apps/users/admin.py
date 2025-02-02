@@ -59,24 +59,24 @@ class AdminAdmin(unfold.ModelAdmin):
     )
 
 class BaseUserAdmin(unfold.ModelAdmin):
-    list_display = ("id", "full_name", "email", "phone_number", "is_active", "is_staff", "is_superuser")
+    list_display = ("id", "username", "email", "first_name", "last_name", "is_active", "is_staff", "is_superuser")
     list_filter = ("is_active", "is_staff", "is_superuser", "date_joined")
-    search_fields = ("email", "full_name", "phone_number")
+    search_fields = ("username", "email", "first_name", "last_name")
     ordering = ("-date_joined",)
-    
+
     fieldsets = (
-        (_("Личная информация"), {"fields": ("full_name", "email", "phone_number", "image")}),
-        (_("Разрешения"), {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        (_("Личная информация"), {"fields": ("username", "email", "first_name", "last_name")}),
+        (_("Статус и права доступа"), {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         (_("Важные даты"), {"fields": ("last_login", "date_joined")}),
     )
-    
+
     add_fieldsets = (
         (_("Создание пользователя"), {
             "classes": ("wide",),
-            "fields": ("full_name", "email", "phone_number", "password1", "password2"),
+            "fields": ("username", "email", "first_name", "last_name", "password1", "password2"),
         }),
     )
-    
+
     readonly_fields = ("last_login", "date_joined")
 
 # Регистрация моделей с кастомными интерфейсами администратора
