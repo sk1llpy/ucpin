@@ -58,38 +58,6 @@ class AdminAdmin(unfold.ModelAdmin):
         }),
     )
 
-class BaseUserAdmin(unfold.ModelAdmin):
-    list_display = ("id", "username", "email", "first_name", "last_name", "is_active", "is_staff", "is_superuser")
-    list_filter = ("is_active", "is_staff", "is_superuser", "date_joined")
-    search_fields = ("username", "email", "first_name", "last_name")
-    ordering = ("-date_joined",)
-
-    fieldsets = (
-        (_("Личная информация"), {"fields": ("username", "email", "first_name", "last_name")}),
-        (_("Конфиденциальность данных"), {"fields": ("password", )}),
-        (_("Статус и права доступа"), {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
-        (_("Важные даты"), {"fields": ("last_login", "date_joined")}),
-    )
-
-    add_fieldsets = (
-        (_("Создание пользователя"), {
-            "classes": ("wide",),
-            "fields": ("username", "email", "first_name", "last_name"),
-        }),
-        (_("Конфиденциальность данных"), {
-            "fields": ("password", )
-        }),
-    )
-
-    readonly_fields = ("last_login", "date_joined")
-
-    def save_model(self, request, obj, form, change):
-        if not change:
-            obj.set_password(obj.password)
-        super().save_model(request, obj, form, change)
-
-        return super().save_model(request, obj, form, change)
-
 # Регистрация моделей с кастомными интерфейсами администратора
 admin.site.register(User, UserAdmin)
 admin.site.register(Account, AccountAdmin)
@@ -97,11 +65,3 @@ admin.site.register(Admin, AdminAdmin)
 
 admin.site.unregister(BaseGroup)
 admin.site.unregister(BaseUser)
-
-admin.site.register(BaseUser, BaseUserAdmin)
-
-
-
-
-
-
