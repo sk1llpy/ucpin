@@ -66,7 +66,7 @@ class BaseUserAdmin(unfold.ModelAdmin):
 
     fieldsets = (
         (_("Личная информация"), {"fields": ("username", "email", "first_name", "last_name")}),
-        (_("Конфиденциальность данных"), {"fields": ("password", )})
+        (_("Конфиденциальность данных"), {"fields": ("password", )}),
         (_("Статус и права доступа"), {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         (_("Важные даты"), {"fields": ("last_login", "date_joined")}),
     )
@@ -74,7 +74,10 @@ class BaseUserAdmin(unfold.ModelAdmin):
     add_fieldsets = (
         (_("Создание пользователя"), {
             "classes": ("wide",),
-            "fields": ("username", "email", "first_name", "last_name" "password"),
+            "fields": ("username", "email", "first_name", "last_name"),
+        }),
+        (_("Конфиденциальность данных"), {
+            "fields": ("password", )
         }),
     )
 
