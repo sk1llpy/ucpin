@@ -62,5 +62,4 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Admin, AdminAdmin)
 
-admin.site.unregister(BaseUser)
 admin.site.unregister(BaseGroup)
